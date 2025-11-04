@@ -1,4 +1,4 @@
-type Period = "daily" | "weekly" | "monthly" | "annually";
+export type Period = "daily" | "weekly" | "monthly" | "annually";
 
 /** Represents the minimum/maximum frequency of which the user wants to perform/avoid a habit. */
 export class Frequency {

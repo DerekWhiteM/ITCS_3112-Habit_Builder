@@ -1,4 +1,4 @@
-import { Frequency } from "../Frequency";
+import { Frequency, Period } from "../Frequency";
 import { PositiveHabit } from "../PositiveHabit";
 
 describe("Test habits", () => {
@@ -7,7 +7,7 @@ describe("Test habits", () => {
         const id = 1;
         const name = "Do 10 push-ups";
         const multiplicity = 3;
-        const period = "daily";
+        const period: Period = "daily";
         const frequency = new Frequency(multiplicity, period);
         const createdAt = new Date("2025-11-03T00:00:00Z");
 
@@ -30,21 +30,21 @@ describe("Test habits", () => {
         expect(habit.customProperties.category).toBe(customProperties.category);
         expect(habit.customProperties.difficulty).toBe(customProperties.difficulty);
 
-        habit.logEvent();
+        habit.logEvent(new Date("2025-11-04T01:00:00Z"));
 
         expect(habit.countCurrentPeriodEvents()).toBe(1);
         expect(habit.calculateStreak()).toBe(0);
 
-        habit.logEvent();
-        habit.logEvent();
+        habit.logEvent(new Date("2025-11-04T02:00:00Z"));
+        habit.logEvent(new Date("2025-11-04T03:00:00Z"));
 
         expect(habit.calculateStreak()).toBe(1);
 
         habit.logEvent(new Date("2025-11-03T01:00:00Z"));
-        habit.logEvent(new Date("2025-11-03T01:00:00Z"));
-        habit.logEvent(new Date("2025-11-03T01:00:00Z"));
+        habit.logEvent(new Date("2025-11-03T02:00:00Z"));
+        habit.logEvent(new Date("2025-11-03T03:00:00Z"));
 
         expect(habit.calculateStreak()).toBe(2);
     });
-    
+
 });
