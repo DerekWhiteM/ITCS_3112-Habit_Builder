@@ -1,12 +1,12 @@
-import { CustomProperties } from "./CustomProperties";
 import { Frequency } from "./Frequency";
 
-export abstract class Habit<TCustomProperties extends CustomProperties> {
+/** Represents a habit. */
+export abstract class Habit<CustomProperties> {
     id: number;
     name: string;
     frequency: Frequency;
     createdAt: Date;
-    customProperties: TCustomProperties;
+    customProperties: CustomProperties;
 
     events: Date[] = [];
 
@@ -15,7 +15,7 @@ export abstract class Habit<TCustomProperties extends CustomProperties> {
         name: string,
         frequency: Frequency,
         createdAt: Date = new Date(),
-        customProperties: TCustomProperties = {} as TCustomProperties
+        customProperties: CustomProperties = {} as CustomProperties
     ) {
         this.id = id;
         this.name = name;
@@ -24,46 +24,27 @@ export abstract class Habit<TCustomProperties extends CustomProperties> {
         this.customProperties = customProperties;
     }
 
+    /** Log a performance of the habit. */
     logEvent(date: Date = new Date()) {
         this.events.push(date);
         this.events.sort((a, b) => a.getTime() - b.getTime());
     }
 
-    calculateCurrentPeriodProgress(): number {
-        return this.calculatePeriodProgress(this.frequency.getCurrentPeriodStartDate());
+    /** Count the number of events for the current period. */
+    countCurrentPeriodEvents(): number {
+        return this.countPeriodEvents(this.frequency.getCurrentPeriodStartDate());
     }
 
-    calculatePeriodProgress(periodStart: Date): number {
-        const periodEnd = this.frequency.getNextPeriodStart(periodStart);
-        let progress = 0;
-
-        // Iterate through events in reverse order
-        for (let i = this.events.length - 1; i >= 0; i--) {
-            const event = this.events[i];
-            console.log(`Checking event ${i}:`, event,
-                `>= periodStart: ${event >= periodStart}`,
-                `< periodEnd: ${event < periodEnd}`);
-            if (event < periodStart) {
-                break;
-            }
-            if (event < periodEnd) {
-                progress++;
-            }
-        }
-        return progress;
-    }
-
-    abstract isStreakMet(progress: number): boolean;
-
+    /** Calculate the current streak. */
     calculateStreak(): number {
         let streak = 0;
         let periodStart = this.frequency.getCurrentPeriodStartDate();
 
         while (true) {
-            const progress = this.calculatePeriodProgress(periodStart);
+            const progress = this.countPeriodEvents(periodStart);
 
-            // Check if streak condition is met (implemented by subclasses)
-            if (this.isStreakMet(progress)) {
+            // Check if the success condition is met for this period
+            if (this.isPeriodSuccess(progress)) {
                 streak++;
             } else {
                 // Streak broken
@@ -74,12 +55,31 @@ export abstract class Habit<TCustomProperties extends CustomProperties> {
             periodStart = this.frequency.getPreviousPeriodStart(periodStart);
             const periodEnd = this.frequency.getNextPeriodStart(periodStart);
 
-            // Stop if we've gone before the creation date
+            // Stop if we've gone too far
             if (periodEnd <= this.createdAt) {
                 break;
             }
         }
 
         return streak;
+    }
+
+    /** Determine whether the number of events adheres to the frequency policy. */
+    protected abstract isPeriodSuccess(numEvents: number): boolean;
+
+    /** Count the number of events for a period. */
+    private countPeriodEvents(periodStart: Date): number {
+        const periodEnd = this.frequency.getNextPeriodStart(periodStart);
+        let numEvents = 0;
+        for (let i = this.events.length - 1; i >= 0; i--) {
+            const event = this.events[i];
+            if (event < periodStart) {
+                break;
+            }
+            if (event < periodEnd) {
+                numEvents++;
+            }
+        }
+        return numEvents;
     }
 }

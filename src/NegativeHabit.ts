@@ -1,10 +1,11 @@
 import { Habit } from "./Habit";
-import { CustomProperties } from "./CustomProperties";
 
-export class NegativeHabit<TCustomProperties extends CustomProperties> extends Habit<TCustomProperties> {
+/** Represents a habit the user wants to do less of. */
+export class NegativeHabit<CustomProperties> extends Habit<CustomProperties> {
 
-    isStreakMet(progress: number): boolean {
-        return progress < this.frequency.multiplicity;
+    /** Success if the number of events is less than or equal to the defined multiplicity. */
+    isPeriodSuccess(numEvents: number): boolean {
+        return numEvents <= this.frequency.multiplicity;
     }
 
 }

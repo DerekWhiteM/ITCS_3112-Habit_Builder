@@ -1,8 +1,9 @@
 type Period = "daily" | "weekly" | "monthly" | "annually";
 
+/** Represents the minimum/maximum frequency of which the user wants to perform/avoid a habit. */
 export class Frequency {
     multiplicity: number;
-    period: "daily" | "weekly" | "monthly" | "annually";
+    period: Period;
 
     constructor(multiplicity: number, period: Period) {
         if (!Number.isInteger(multiplicity)) {
@@ -15,33 +16,35 @@ export class Frequency {
         this.period = period;
     }
 
+    /** Get the start date for the current period. */
     getCurrentPeriodStartDate(): Date {
-        const earliestDate = new Date();
+        const startDate = new Date();
         switch (this.period) {
             case "daily":
                 // Get the start of the current day
-                earliestDate.setUTCHours(0, 0, 0, 0);
+                startDate.setUTCHours(0, 0, 0, 0);
                 break;
             case "weekly":
                 // Get the start of the current week (Sunday)
-                const dayOfWeek = earliestDate.getUTCDay();
-                earliestDate.setUTCDate(earliestDate.getUTCDate() - dayOfWeek);
-                earliestDate.setUTCHours(0, 0, 0, 0);
+                const dayOfWeek = startDate.getUTCDay();
+                startDate.setUTCDate(startDate.getUTCDate() - dayOfWeek);
+                startDate.setUTCHours(0, 0, 0, 0);
                 break;
             case "monthly":
                 // Get the start of the current month
-                earliestDate.setUTCDate(1);
-                earliestDate.setUTCHours(0, 0, 0, 0);
+                startDate.setUTCDate(1);
+                startDate.setUTCHours(0, 0, 0, 0);
                 break;
             case "annually":
                 // Get the start of the current year
-                earliestDate.setUTCMonth(0, 1);
-                earliestDate.setUTCHours(0, 0, 0, 0);
+                startDate.setUTCMonth(0, 1);
+                startDate.setUTCHours(0, 0, 0, 0);
                 break;
         }
-        return earliestDate;
+        return startDate;
     }
 
+    /** Get the start date for the previous period given a date. */
     getPreviousPeriodStart(date: Date): Date {
         const previousDate = new Date(date);
         switch (this.period) {
@@ -61,6 +64,7 @@ export class Frequency {
         return previousDate;
     }
 
+    /** Get the start date for the next period given a date. */
     getNextPeriodStart(date: Date): Date {
         const nextDate = new Date(date);
         switch (this.period) {
