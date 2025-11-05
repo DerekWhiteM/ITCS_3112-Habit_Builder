@@ -16,7 +16,7 @@ export class Frequency {
         this.period = period;
     }
 
-    /** Get the start date for the current period. */
+    /** Get the start date for a period. */
     getPeriodStart(date: Date): Date {
         const startDate = new Date(date);
         switch (this.period) {
@@ -44,7 +44,7 @@ export class Frequency {
         return startDate;
     }
 
-    /** Get the end date for the current period. */
+    /** Get the end date for a period. */
     getPeriodEnd(date: Date): Date {
         const endDate = new Date(date);
         switch (this.period) {
