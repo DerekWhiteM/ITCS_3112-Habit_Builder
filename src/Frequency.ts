@@ -17,8 +17,8 @@ export class Frequency {
     }
 
     /** Get the start date for the current period. */
-    getCurrentPeriodStartDate(): Date {
-        const startDate = new Date();
+    getPeriodStart(date: Date): Date {
+        const startDate = new Date(date);
         switch (this.period) {
             case "daily":
                 // Get the start of the current day
@@ -44,6 +44,34 @@ export class Frequency {
         return startDate;
     }
 
+    /** Get the end date for the current period. */
+    getPeriodEnd(date: Date): Date {
+        const endDate = new Date(date);
+        switch (this.period) {
+            case "daily":
+                // Get the end of the current day
+                endDate.setUTCHours(23, 59, 59, 999);
+                break;
+            case "weekly":
+                // Get the end of the current week (Saturday)
+                const dayOfWeek = endDate.getUTCDay();
+                endDate.setUTCDate(endDate.getUTCDate() + (6 - dayOfWeek));
+                endDate.setUTCHours(23, 59, 59, 999);
+                break;
+            case "monthly":
+                // Get the end of the current month
+                endDate.setUTCMonth(endDate.getUTCMonth() + 1, 0);
+                endDate.setUTCHours(23, 59, 59, 999);
+                break;
+            case "annually":
+                // Get the end of the current year
+                endDate.setUTCMonth(11, 31);
+                endDate.setUTCHours(23, 59, 59, 999);
+                break;
+        }
+        return endDate;
+    }
+
     /** Get the start date for the previous period given a date. */
     getPreviousPeriodStart(date: Date): Date {
         const previousDate = new Date(date);
@@ -61,26 +89,7 @@ export class Frequency {
                 previousDate.setUTCFullYear(previousDate.getUTCFullYear() - 1);
                 break;
         }
-        return previousDate;
+        return this.getPeriodStart(previousDate);
     }
 
-    /** Get the start date for the next period given a date. */
-    getNextPeriodStart(date: Date): Date {
-        const nextDate = new Date(date);
-        switch (this.period) {
-            case "daily":
-                nextDate.setUTCDate(nextDate.getUTCDate() + 1);
-                break;
-            case "weekly":
-                nextDate.setUTCDate(nextDate.getUTCDate() + 7);
-                break;
-            case "monthly":
-                nextDate.setUTCMonth(nextDate.getUTCMonth() + 1);
-                break;
-            case "annually":
-                nextDate.setUTCFullYear(nextDate.getUTCFullYear() + 1);
-                break;
-        }
-        return nextDate;
-    }
 }
