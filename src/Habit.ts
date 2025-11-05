@@ -73,6 +73,11 @@ export abstract class Habit<CustomProperties> {
             }
         }
 
+        return this.adjustCalculatedStreak(streak);
+    }
+
+    /** Overridden by NegativeHabit */
+    protected adjustCalculatedStreak(streak: number) {
         return streak;
     }
 

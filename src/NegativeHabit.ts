@@ -8,4 +8,9 @@ export class NegativeHabit<CustomProperties> extends Habit<CustomProperties> {
         return numEvents <= this.frequency.multiplicity;
     }
 
+    /** Adjusts down the calculated streak to account for success being counted in the current period. */
+    protected adjustCalculatedStreak(streak: number): number {
+        return Math.max(0, streak - 1);
+    }
+
 }
