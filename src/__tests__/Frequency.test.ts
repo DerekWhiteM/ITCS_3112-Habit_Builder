@@ -28,8 +28,8 @@ describe("Test Frequency", () => {
         expect(frequency.getPreviousPeriodStart(date)).toEqual(new Date("2025-10-01T00:00:00Z"));
     });
 
-    test("Annually", () => {
-        const frequency = new Frequency(1, "annually");
+    test("Yearly", () => {
+        const frequency = new Frequency(1, "yearly");
         frequency.getPeriodStart(date);
         expect(frequency.getPeriodStart(date)).toEqual(new Date("2025-01-01T00:00:00Z"));
         expect(frequency.getPeriodEnd(date)).toEqual(new Date("2025-12-31T23:59:59.999Z"));

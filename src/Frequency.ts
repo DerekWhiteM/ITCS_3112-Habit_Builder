@@ -1,4 +1,4 @@
-export type Period = "daily" | "weekly" | "monthly" | "annually";
+export type Period = "daily" | "weekly" | "monthly" | "yearly";
 
 /** Represents the minimum/maximum frequency of which the user wants to perform/avoid a habit. */
 export class Frequency {
@@ -35,7 +35,7 @@ export class Frequency {
                 startDate.setUTCDate(1);
                 startDate.setUTCHours(0, 0, 0, 0);
                 break;
-            case "annually":
+            case "yearly":
                 // Get the start of the current year
                 startDate.setUTCMonth(0, 1);
                 startDate.setUTCHours(0, 0, 0, 0);
@@ -63,7 +63,7 @@ export class Frequency {
                 endDate.setUTCMonth(endDate.getUTCMonth() + 1, 0);
                 endDate.setUTCHours(23, 59, 59, 999);
                 break;
-            case "annually":
+            case "yearly":
                 // Get the end of the current year
                 endDate.setUTCMonth(11, 31);
                 endDate.setUTCHours(23, 59, 59, 999);
@@ -85,7 +85,7 @@ export class Frequency {
             case "monthly":
                 previousDate.setUTCMonth(previousDate.getUTCMonth() - 1);
                 break;
-            case "annually":
+            case "yearly":
                 previousDate.setUTCFullYear(previousDate.getUTCFullYear() - 1);
                 break;
         }
