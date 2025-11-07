@@ -1,27 +1,41 @@
 import { Frequency } from "./Frequency";
 
+export enum HabitType {
+    POSITIVE,
+    NEGATIVE
+}
+
 /** Represents a habit. */
-export abstract class Habit<CustomProperties> {
-    id: number;
+export class Habit {
+    type: HabitType;
+    id: string;
     name: string;
     frequency: Frequency;
     createdAt: Date;
-    customProperties: CustomProperties;
 
     events: Date[] = [];
 
     constructor(
-        id: number,
+        type: HabitType,
+        id: string,
         name: string,
         frequency: Frequency,
-        createdAt: Date = new Date(),
-        customProperties: CustomProperties = {} as CustomProperties
+        createdAt: Date,
     ) {
+        if (
+            type === undefined ||
+            id === undefined ||
+            name === undefined ||
+            frequency === undefined ||
+            createdAt === undefined
+        ) {
+            throw "Missing required parameter";
+        }
+        this.type = type;
         this.id = id;
         this.name = name;
         this.frequency = frequency;
         this.createdAt = createdAt;
-        this.customProperties = customProperties;
     }
 
     /** Log a performance of the habit. */
@@ -77,10 +91,22 @@ export abstract class Habit<CustomProperties> {
     }
 
     /** Overridden by NegativeHabit */
-    protected adjustCalculatedStreak(streak: number) {
-        return streak;
+    private adjustCalculatedStreak(streak: number) {
+        switch (this.type) {
+            case HabitType.POSITIVE:
+                return streak;
+            case HabitType.NEGATIVE:
+                return Math.max(0, streak - 1);
+        }
     }
 
     /** Determine whether the number of events adheres to the frequency policy. */
-    protected abstract isPeriodSuccess(numEvents: number): boolean;
+    private isPeriodSuccess(numEvents: number): boolean {
+        switch (this.type) {
+            case HabitType.POSITIVE:
+                return numEvents >= this.frequency.multiplicity;
+            case HabitType.NEGATIVE:
+                return numEvents <= this.frequency.multiplicity;
+        }
+    };
 }

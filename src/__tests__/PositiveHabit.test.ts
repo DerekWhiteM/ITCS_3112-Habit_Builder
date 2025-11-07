@@ -1,9 +1,10 @@
 import { Frequency, Period } from "../Frequency";
-import { PositiveHabit } from "../PositiveHabit";
+import { Habit, HabitType } from "../Habit";
 
 describe("Test positive habits", () => {
 
-    const id = 1;
+    const type = HabitType.POSITIVE;
+    const id = '1';
     const name = "Do 10 push-ups";
 
     test("Daily", () => {
@@ -12,7 +13,9 @@ describe("Test positive habits", () => {
         const frequency = new Frequency(multiplicity, period);
         const today = new Date("2025-11-04T00:00:00Z");
         const yesterday = new Date(new Date(today).setUTCDate(today.getUTCDate() - 1));
-        const habit = new PositiveHabit(id, name, frequency, yesterday);
+
+        const habit = new Habit(type, id, name, frequency, yesterday);
+
         habit.logEvent(today);
         expect(habit.countPeriodEvents(today)).toBe(1);
         expect(habit.calculateStreak(today)).toBe(0);
@@ -31,7 +34,7 @@ describe("Test positive habits", () => {
         const frequency = new Frequency(multiplicity, period);
         const today = new Date("2025-11-04T00:00:00Z");
         const lastWeek = new Date(new Date(today).setUTCDate(today.getUTCDate() - 7));
-        const habit = new PositiveHabit(id, name, frequency, lastWeek);
+        const habit = new Habit(type, id, name, frequency, lastWeek);
         habit.logEvent(today);
         expect(habit.countPeriodEvents(today)).toBe(1);
         expect(habit.calculateStreak(today)).toBe(0);
@@ -50,7 +53,7 @@ describe("Test positive habits", () => {
         const frequency = new Frequency(multiplicity, period);
         const today = new Date("2025-11-04T00:00:00Z");
         const lastMonth = new Date(new Date(today).setUTCMonth(today.getUTCMonth() - 1));
-        const habit = new PositiveHabit(id, name, frequency, lastMonth);
+        const habit = new Habit(type, id, name, frequency, lastMonth);
         habit.logEvent(today);
         expect(habit.countPeriodEvents(today)).toBe(1);
         expect(habit.calculateStreak(today)).toBe(0);
@@ -69,7 +72,7 @@ describe("Test positive habits", () => {
         const frequency = new Frequency(multiplicity, period);
         const today = new Date("2025-11-04T00:00:00Z");
         const lastYear = new Date(new Date(today).setUTCFullYear(today.getUTCFullYear() - 1));
-        const habit = new PositiveHabit(id, name, frequency, lastYear);
+        const habit = new Habit(type, id, name, frequency, lastYear);
         habit.logEvent(today);
         expect(habit.countPeriodEvents(today)).toBe(1);
         expect(habit.calculateStreak(today)).toBe(0);
