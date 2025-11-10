@@ -1,31 +1,34 @@
-import { Habit } from "./Habit";
 import { RepositoryAdapter } from "./RepositoryAdapter";
 
-export class InMemoryRepository<T extends Habit> implements RepositoryAdapter<Habit> {
+interface Record {
+    id: number | string
+}
 
-    habits: T[] = [];
+export class InMemoryRepository<T extends Record> implements RepositoryAdapter<T> {
 
-    add(habit: T): Promise<void> {
-        this.habits.push(habit);
+    records: T[] = [];
+
+    add(record: T): Promise<void> {
+        this.records.push(record);
         return Promise.resolve();
     }
 
     get(filter?: Partial<T>): Promise<T[]> {
         if (!filter || Object.keys(filter).length === 0) {
-            return Promise.resolve([...this.habits]);
+            return Promise.resolve([...this.records]);
         }
 
-        const filtered = this.habits.filter(habit => {
-            return Object.entries(filter).every(([key, value]) => (habit as any)[key] === value);
+        const filtered = this.records.filter(record => {
+            return Object.entries(filter).every(([key, value]) => (record as any)[key] === value);
         });
 
         return Promise.resolve(filtered);
     }
 
     update(id: string, data: Partial<T>): Promise<void> {
-        const habit = this.habits.find(h => h.id === id);
+        const habit = this.records.find(h => h.id === id);
         if (!habit) {
-            return Promise.reject(new Error(`Habit with id ${id} not found`));
+            return Promise.reject(new Error(`Record (id: ${id}) not found`));
         }
 
         Object.assign(habit, data);
@@ -33,12 +36,12 @@ export class InMemoryRepository<T extends Habit> implements RepositoryAdapter<Ha
     }
 
     delete(id: string): Promise<void> {
-        const index = this.habits.findIndex(h => h.id === id);
+        const index = this.records.findIndex(record => record.id === id);
         if (index === -1) {
-            return Promise.reject(new Error(`Habit with id ${id} not found`));
+            return Promise.reject(new Error(`Record (id: ${id}) not found`));
         }
 
-        this.habits.splice(index, 1);
+        this.records.splice(index, 1);
         return Promise.resolve();
     }
 

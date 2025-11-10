@@ -1,13 +1,13 @@
-export interface RepositoryAdapter<Habit> {
+export interface RepositoryAdapter<T> {
 
     // Create
-    add(habit: Habit): Promise<void>;
+    add(habit: T): Promise<void>;
 
     // Read
-    get(filter?: Partial<Habit>): Promise<Habit[]>;
+    get(filter?: Partial<T>): Promise<T[]>;
 
     // Update
-    update(id: string, data: Partial<Habit>): Promise<void>;
+    update(id: string, data: Partial<T>): Promise<void>;
 
     // Delete
     delete(id: string): Promise<void>;
