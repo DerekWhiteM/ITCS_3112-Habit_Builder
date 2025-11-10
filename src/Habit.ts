@@ -1,39 +1,43 @@
-import { Frequency } from "./Frequency";
+import { Period } from "./Period";
 
 export enum HabitType {
     POSITIVE,
     NEGATIVE
 }
 
-/** Represents a habit. */
+export type HabitFrequency = {
+    multiplicity: number,
+    period: Period,
+}
+
 export class Habit {
-    type: HabitType;
     id: string;
     name: string;
-    frequency: Frequency;
+    type: HabitType;
+    frequency: HabitFrequency;
     createdAt: Date;
 
     events: Date[] = [];
 
     constructor(
-        type: HabitType,
         id: string,
         name: string,
-        frequency: Frequency,
+        type: HabitType,
+        frequency: HabitFrequency,
         createdAt: Date,
     ) {
         if (
-            type === undefined ||
             id === undefined ||
             name === undefined ||
+            type === undefined ||
             frequency === undefined ||
             createdAt === undefined
         ) {
             throw "Missing required parameter";
         }
-        this.type = type;
         this.id = id;
         this.name = name;
+        this.type = type;
         this.frequency = frequency;
         this.createdAt = createdAt;
     }
@@ -46,8 +50,8 @@ export class Habit {
 
     /** Count the number of events for a period. */
     countPeriodEvents(date: Date): number {
-        const periodStart = this.frequency.getPeriodStart(date);
-        const periodEnd = this.frequency.getPeriodEnd(date);
+        const periodStart = this.frequency.period.getPeriodStart(date);
+        const periodEnd = this.frequency.period.getPeriodEnd(date);
         let numEvents = 0;
         for (let i = this.events.length - 1; i >= 0; i--) {
             const event = this.events[i];
@@ -64,7 +68,7 @@ export class Habit {
     /** Calculate the streak at a given date. */
     calculateStreak(date: Date): number {
         let streak = 0;
-        let periodStart = this.frequency.getPeriodStart(date);
+        let periodStart = this.frequency.period.getPeriodStart(date);
 
         while (true) {
             const progress = this.countPeriodEvents(periodStart);
@@ -78,8 +82,8 @@ export class Habit {
             }
 
             // Move to previous period
-            periodStart = this.frequency.getPreviousPeriodStart(periodStart);
-            const periodEnd = this.frequency.getPeriodEnd(periodStart);
+            periodStart = this.frequency.period.getPreviousPeriodStart(periodStart);
+            const periodEnd = this.frequency.period.getPeriodEnd(periodStart);
 
             // Stop if we've gone too far
             if (periodEnd <= this.createdAt) {

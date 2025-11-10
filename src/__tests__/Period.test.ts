@@ -1,11 +1,11 @@
-import { Frequency } from "../Frequency";
+import { PeriodFactory } from "../Period";
 
-describe("Test Frequency", () => {
+describe("Test Period", () => {
 
     const date = new Date("2025-11-04T09:00:00Z");
 
     test("Daily", () => {
-        const frequency = new Frequency(1, "daily");
+        const frequency = PeriodFactory.daily();
         frequency.getPeriodStart(date);
         expect(frequency.getPeriodStart(date)).toEqual(new Date("2025-11-04T00:00:00Z"));
         expect(frequency.getPeriodEnd(date)).toEqual(new Date("2025-11-04T23:59:59.999Z"));
@@ -13,7 +13,7 @@ describe("Test Frequency", () => {
     });
 
     test("Weekly", () => {
-        const frequency = new Frequency(1, "weekly");
+        const frequency = PeriodFactory.weekly();
         frequency.getPeriodStart(date);
         expect(frequency.getPeriodStart(date)).toEqual(new Date("2025-11-02T00:00:00Z"));
         expect(frequency.getPeriodEnd(date)).toEqual(new Date("2025-11-08T23:59:59.999Z"));
@@ -21,7 +21,7 @@ describe("Test Frequency", () => {
     });
 
     test("Monthly", () => {
-        const frequency = new Frequency(1, "monthly");
+        const frequency = PeriodFactory.monthly();
         frequency.getPeriodStart(date);
         expect(frequency.getPeriodStart(date)).toEqual(new Date("2025-11-01T00:00:00Z"));
         expect(frequency.getPeriodEnd(date)).toEqual(new Date("2025-11-30T23:59:59.999Z"));
@@ -29,7 +29,7 @@ describe("Test Frequency", () => {
     });
 
     test("Yearly", () => {
-        const frequency = new Frequency(1, "yearly");
+        const frequency = PeriodFactory.yearly();
         frequency.getPeriodStart(date);
         expect(frequency.getPeriodStart(date)).toEqual(new Date("2025-01-01T00:00:00Z"));
         expect(frequency.getPeriodEnd(date)).toEqual(new Date("2025-12-31T23:59:59.999Z"));

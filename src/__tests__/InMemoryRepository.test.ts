@@ -1,19 +1,19 @@
-import { Frequency } from "../Frequency";
-import { Habit, HabitType } from "../Habit";
+import { Habit, HabitType, HabitFrequency } from "../Habit";
 import { InMemoryRepository } from "../InMemoryRepository";
+import { PeriodFactory } from "../Period";
 
 class CustomHabit extends Habit {
     category: string;
 
     constructor(
-        type: HabitType,
         id: string,
         name: string,
-        frequency: Frequency,
+        type: HabitType,
+        frequency: HabitFrequency,
         createdAt: Date,
         category: string,
     ) {
-        super(type, id, name, frequency, createdAt);
+        super(id, name, type, frequency, createdAt);
         this.category = category;
     }
 }
@@ -21,8 +21,8 @@ class CustomHabit extends Habit {
 describe("Test InMemoryRepositoryAdapter", () => {
 
     test("Adding a Habit to the repository", async () => {
-        const habit = new CustomHabit(HabitType.POSITIVE, '1', 'do something', new Frequency(1, "daily"), new Date(), "health");
-        const habit2 = new CustomHabit(HabitType.NEGATIVE, '2', 'do nothing', new Frequency(1, "daily"), new Date(), "health");
+        const habit = new CustomHabit('1', 'do something', HabitType.POSITIVE, { multiplicity: 1, period: PeriodFactory.daily() }, new Date(), "health");
+        const habit2 = new CustomHabit('2', 'do nothing', HabitType.NEGATIVE, { multiplicity: 1, period: PeriodFactory.daily() }, new Date(), "health");
         const repository = new InMemoryRepository<CustomHabit>();
         repository.add(habit);
         repository.add(habit2);
