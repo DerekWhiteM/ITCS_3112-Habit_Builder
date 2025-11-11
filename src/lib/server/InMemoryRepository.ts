@@ -1,4 +1,4 @@
-import { RepositoryAdapter } from "./RepositoryAdapter";
+import type { RepositoryAdapter } from "$lib/server/RepositoryAdapter";
 
 interface Record {
     id: number | string

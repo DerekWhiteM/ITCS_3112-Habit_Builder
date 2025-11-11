@@ -1,40 +1,30 @@
 {
-  "name": "itcs_3112-habit_builder",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "nodemon --exec ts-node src/index.ts",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DerekWhiteM/ITCS_3112-Habit_Builder.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/DerekWhiteM/ITCS_3112-Habit_Builder/issues"
-  },
-  "homepage": "https://github.com/DerekWhiteM/ITCS_3112-Habit_Builder#readme",
-  "devDependencies": {
-    "@types/express": "^5.0.5",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^24.10.0",
-    "jest": "^30.2.0",
-    "nodemon": "^3.1.10",
-    "ts-jest": "^29.4.5",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
-  },
-  "dependencies": {
-    "express": "^5.1.0"
-  }
+	"name": "myapp",
+	"private": true,
+	"version": "0.0.1",
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"prepare": "svelte-kit sync || echo ''",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"test:unit": "vitest",
+		"test": "npm run test:unit -- --run"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-auto": "^7.0.0",
+		"@sveltejs/kit": "^2.47.1",
+		"@sveltejs/vite-plugin-svelte": "^6.2.1",
+		"@tailwindcss/forms": "^0.5.10",
+		"@tailwindcss/typography": "^0.5.19",
+		"@tailwindcss/vite": "^4.1.14",
+		"svelte": "^5.41.0",
+		"svelte-check": "^4.3.3",
+		"tailwindcss": "^4.1.14",
+		"typescript": "^5.9.3",
+		"vite": "^7.1.10",
+		"vitest": "^4.0.5"
+	}
 }

@@ -1,4 +1,6 @@
-import { Habit, HabitType, HabitFrequency } from "../Habit";
+import { describe, expect, test } from "vitest";
+import { Habit, HabitType } from "../Habit";
+import type { HabitFrequency } from "../Habit";
 import { InMemoryRepository } from "../InMemoryRepository";
 import { PeriodFactory } from "../Period";
 
