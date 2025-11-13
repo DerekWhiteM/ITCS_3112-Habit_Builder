@@ -1,4 +1,4 @@
-import type { RepositoryAdapter } from "$lib/server/RepositoryAdapter";
+import type { RepositoryAdapter } from "$lib/server/CustomHabitBuilder/RepositoryAdapter";
 
 interface Record {
     id: number | string

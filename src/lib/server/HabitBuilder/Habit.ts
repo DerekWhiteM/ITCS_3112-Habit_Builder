@@ -1,4 +1,4 @@
-import type { Period } from "$lib/server/Period";
+import type { Period } from "$lib/server/HabitBuilder/Period";
 
 export enum HabitType {
     POSITIVE,

@@ -1,6 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { UserRepository, Role } from '$lib/server/User';
+import { UserRepository, Role } from '$lib/server/CustomHabitBuilder/User';
 import type { Actions, PageServerLoad } from './$types';
+import { CustomHabitBuilder } from '$lib/server/CustomHabitBuilder/CustomHabitBuilder';
 
 export const load: PageServerLoad = async ({ cookies }) => {
     const userId = cookies.get('userId');
@@ -18,8 +19,8 @@ export const actions: Actions = {
             return fail(400, { error: 'Username is required', username: '' });
         }
 
-        const userRepo = UserRepository.getInstance();
-        const user = await userRepo.getUserByUsername(username);
+        const habitBuilder = CustomHabitBuilder.getInstance();
+        const user = await habitBuilder.getUserByUsername(username);
 
         if (!user) {
             return fail(400, { error: 'User not found', username });
@@ -47,15 +48,15 @@ export const actions: Actions = {
             return fail(400, { error: 'Username must be at least 3 characters', username });
         }
 
-        const userRepo = UserRepository.getInstance();
-        const existingUser = await userRepo.getUserByUsername(username);
+        const habitBuilder = CustomHabitBuilder.getInstance();
+        const existingUser = await habitBuilder.getUserByUsername(username);
 
         if (existingUser) {
             return fail(400, { error: 'Username already exists', username });
         }
 
         const id = Date.now(); // Simple ID generation
-        await userRepo.saveUser({ id, username, role: Role.USER });
+        await habitBuilder.createUser(id, username, 'User');
 
         cookies.set('userId', id.toString(), {
             path: '/',

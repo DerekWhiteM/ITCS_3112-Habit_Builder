@@ -37,4 +37,9 @@ export class UserRepository {
         return users[0];
     }
 
+    public async getUserById(id: number) {
+        const users = await this.repository.get({ id });
+        return users[0];
+    }
+
 }

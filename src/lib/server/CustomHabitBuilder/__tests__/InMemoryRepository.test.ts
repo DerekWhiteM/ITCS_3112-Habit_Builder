@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
-import { Habit, HabitType } from "../Habit";
-import type { HabitFrequency } from "../Habit";
+import { Habit, HabitType } from "../../HabitBuilder/Habit";
+import type { HabitFrequency } from "../../HabitBuilder/Habit";
 import { InMemoryRepository } from "../InMemoryRepository";
-import { PeriodFactory } from "../Period";
+import { PeriodFactory } from "../../HabitBuilder/Period";
 
 class CustomHabit extends Habit {
     category: string;
