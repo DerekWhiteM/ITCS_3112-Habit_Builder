@@ -1,6 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { Role } from '$lib/server/User';
-import { UserRepository } from '$lib/server/UserRepository';
+import { UserRepository, Role } from '$lib/server/User';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ cookies }) => {
@@ -56,7 +55,7 @@ export const actions: Actions = {
         }
 
         const id = Date.now(); // Simple ID generation
-        await userRepo.createUser(id, username, Role.USER);
+        await userRepo.saveUser({ id, username, role: Role.USER });
 
         cookies.set('userId', id.toString(), {
             path: '/',

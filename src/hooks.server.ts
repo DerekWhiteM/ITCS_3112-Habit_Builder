@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit';
-import { UserRepository } from '$lib/server/UserRepository';
+import { UserRepository } from '$lib/server/User';
 import type { Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
