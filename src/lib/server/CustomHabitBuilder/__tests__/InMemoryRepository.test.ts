@@ -23,8 +23,8 @@ class CustomHabit extends Habit {
 describe("Test InMemoryRepositoryAdapter", () => {
 
     test("Adding a Habit to the repository", async () => {
-        const habit = new CustomHabit('1', 'do something', HabitType.POSITIVE, { multiplicity: 1, period: PeriodFactory.daily() }, new Date(), "health");
-        const habit2 = new CustomHabit('2', 'do nothing', HabitType.NEGATIVE, { multiplicity: 1, period: PeriodFactory.daily() }, new Date(), "health");
+        const habit = new CustomHabit('1', 'do something', HabitType.POSITIVE, { multiplicity: 1, period: PeriodFactory.create('daily') }, new Date(), "health");
+        const habit2 = new CustomHabit('2', 'do nothing', HabitType.NEGATIVE, { multiplicity: 1, period: PeriodFactory.create('daily') }, new Date(), "health");
         const repository = new InMemoryRepository<CustomHabit>();
         repository.add(habit);
         repository.add(habit2);

@@ -13,7 +13,7 @@ describe("Test positive habits", () => {
         const yesterday = new Date(new Date(today).setUTCDate(today.getUTCDate() - 1));
         const frequency = {
             multiplicity: 3,
-            period: PeriodFactory.daily(),
+            period: PeriodFactory.create('daily'),
         };
         const habit = new Habit(id, name, type, frequency, yesterday);
         habit.logEvent(today);
@@ -32,7 +32,7 @@ describe("Test positive habits", () => {
         const lastWeek = new Date(new Date(today).setUTCDate(today.getUTCDate() - 7));
         const frequency = {
             multiplicity: 3,
-            period: PeriodFactory.weekly(),
+            period: PeriodFactory.create('weekly'),
         };
         const habit = new Habit(id, name, type, frequency, lastWeek);
         habit.logEvent(today);
@@ -51,7 +51,7 @@ describe("Test positive habits", () => {
         const lastMonth = new Date(new Date(today).setUTCMonth(today.getUTCMonth() - 1));
         const frequency = {
             multiplicity: 3,
-            period: PeriodFactory.monthly(),
+            period: PeriodFactory.create('monthly'),
         };
         const habit = new Habit(id, name, type, frequency, lastMonth);
         habit.logEvent(today);
@@ -70,7 +70,7 @@ describe("Test positive habits", () => {
         const lastYear = new Date(new Date(today).setUTCFullYear(today.getUTCFullYear() - 1));
         const frequency = {
             multiplicity: 3,
-            period: PeriodFactory.yearly(),
+            period: PeriodFactory.create('yearly'),
         };
         const habit = new Habit(id, name, type, frequency, lastYear);
         habit.logEvent(today);
@@ -98,7 +98,7 @@ describe("Test negative habits", () => {
         const yesterday = new Date(new Date(today).setUTCDate(today.getUTCDate() - 1));
         const frequency = {
             multiplicity: 1,
-            period: PeriodFactory.daily(),
+            period: PeriodFactory.create('daily'),
         };
         const habit = new Habit(id, name, type, frequency, yesterday);
         expect(habit.countPeriodEvents(yesterday)).toBe(0);
@@ -114,7 +114,7 @@ describe("Test negative habits", () => {
         const lastWeek = new Date(new Date(today).setUTCDate(today.getUTCDate() - 7));
         const frequency = {
             multiplicity: 1,
-            period: PeriodFactory.weekly(),
+            period: PeriodFactory.create('weekly'),
         };
         const habit = new Habit(id, name, type, frequency, lastWeek);
         expect(habit.countPeriodEvents(lastWeek)).toBe(0);
@@ -130,7 +130,7 @@ describe("Test negative habits", () => {
         const lastMonth = new Date(new Date(today).setUTCMonth(today.getUTCMonth() - 1));
         const frequency = {
             multiplicity: 1,
-            period: PeriodFactory.monthly(),
+            period: PeriodFactory.create('monthly'),
         };
         const habit = new Habit(id, name, type, frequency, lastMonth);
         expect(habit.countPeriodEvents(lastMonth)).toBe(0);
@@ -146,7 +146,7 @@ describe("Test negative habits", () => {
         const lastYear = new Date(new Date(today).setUTCFullYear(today.getUTCFullYear() - 1));
         const frequency = {
             multiplicity: 1,
-            period: PeriodFactory.yearly(),
+            period: PeriodFactory.create('yearly'),
         };
         const habit = new Habit(id, name, type, frequency, lastYear);
         expect(habit.countPeriodEvents(lastYear)).toBe(0);

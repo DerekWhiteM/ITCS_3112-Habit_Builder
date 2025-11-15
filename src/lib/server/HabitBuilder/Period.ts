@@ -11,15 +11,30 @@ export interface Period {
 
 }
 
+export type PeriodType = 'daily' | 'weekly' | 'monthly' | 'yearly';
+
+/*
 export const PeriodFactory = {
-    daily(): Period { return new Daily(); },
-    weekly(): Period { return new Weekly(); },
-    monthly(): Period { return new Monthly(); },
-    yearly(): Period { return new Yearly(); },
+    
+    create: (type: PeriodType): Period => (this as any)[type](),
 };
+*/
+
+export class PeriodFactory {
+    private static periods = {
+        daily: () => new Daily(),
+        weekly: () => new Weekly(),
+        monthly: () => new Monthly(),
+        yearly: () => new Yearly(),
+    }
+
+    public static create(type: PeriodType) {
+        return PeriodFactory.periods[type]();
+    }
+}
 
 class Daily implements Period {
-    
+
     /** Get the start of the day */
     getPeriodStart(date: Date): Date {
         const startDate = new Date(date);
@@ -43,7 +58,7 @@ class Daily implements Period {
 }
 
 class Weekly implements Period {
-    
+
     /** Get the start of the week (Sunday) */
     getPeriodStart(date: Date): Date {
         const startDate = new Date(date);
@@ -71,7 +86,7 @@ class Weekly implements Period {
 }
 
 class Monthly implements Period {
-    
+
     /** Get the start of the month */
     getPeriodStart(date: Date): Date {
         const startDate = new Date(date);
@@ -97,7 +112,7 @@ class Monthly implements Period {
 }
 
 class Yearly implements Period {
-    
+
     /** Get the start of the year */
     getPeriodStart(date: Date): Date {
         const startDate = new Date(date);
