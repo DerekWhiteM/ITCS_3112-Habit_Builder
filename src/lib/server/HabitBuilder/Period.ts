@@ -29,7 +29,11 @@ export class PeriodFactory {
     }
 
     public static create(type: PeriodType) {
-        return PeriodFactory.periods[type]();
+        const creator = PeriodFactory.periods[type];
+        if (!creator) {
+            throw new Error(`Unknown period type: ${type}`);
+        }
+        return creator();
     }
 }
 
