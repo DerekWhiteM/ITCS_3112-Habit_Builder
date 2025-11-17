@@ -13,13 +13,6 @@ export interface Period {
 
 export type PeriodType = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
-/*
-export const PeriodFactory = {
-    
-    create: (type: PeriodType): Period => (this as any)[type](),
-};
-*/
-
 export class PeriodFactory {
     private static periods = {
         daily: () => new Daily(),
