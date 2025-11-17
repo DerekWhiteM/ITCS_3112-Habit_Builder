@@ -14,7 +14,7 @@ export type HabitFrequency = {
 }
 
 export class Habit {
-    id: string;
+    id: number | string;
     name: string;
     type: HabitType;
     frequency: HabitFrequency;
@@ -23,7 +23,7 @@ export class Habit {
     events: Date[] = [];
 
     constructor(
-        id: string,
+        id: number | string,
         name: string,
         type: HabitType,
         frequency: HabitFrequency,

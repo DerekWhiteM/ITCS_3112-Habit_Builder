@@ -1,17 +1,15 @@
 import { CustomHabit } from '$lib/server/CustomHabitBuilder/CustomHabit';
 import { CustomHabitBuilder } from '$lib/server/CustomHabitBuilder/CustomHabitBuilder';
-import { HabitRepository } from '$lib/server/HabitBuilder/HabitRepository';
-import { InMemoryRepository } from '$lib/server/CustomHabitBuilder/InMemoryRepository';
 import { redirect } from '@sveltejs/kit';
 import { UserRepository } from '$lib/server/CustomHabitBuilder/User';
 import type { Handle } from '@sveltejs/kit';
+import { HabitRepository } from '$lib/server/CustomHabitBuilder/HabitRepository';
 
 let initialized = false;
 
 function initialize() {
     const userRepo = UserRepository.getInstance();
-    const repositoryAdapter = new InMemoryRepository<CustomHabit>();
-    const habitRepo = HabitRepository.getInstance(repositoryAdapter);
+    const habitRepo = HabitRepository.getInstance();
     CustomHabitBuilder.getInstance(userRepo, habitRepo);
 }
 

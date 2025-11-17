@@ -4,7 +4,7 @@ export class CustomHabit extends Habit {
     userId: number;
 
     constructor(
-        id: string,
+        id: number,
         name: string,
         type: HabitType,
         frequency: HabitFrequency,

@@ -1,5 +1,5 @@
 import { CustomHabit } from "./CustomHabit";
-import { HabitRepository } from "../HabitBuilder/HabitRepository";
+import { HabitRepository } from "../CustomHabitBuilder/HabitRepository";
 import { PeriodFactory, type PeriodType } from "../HabitBuilder/Period";
 import { UserRepository, validateRole } from "./User";
 import { type HabitType, validateHabitType } from "../HabitBuilder/Habit";
@@ -42,7 +42,7 @@ export class CustomHabitBuilder {
     }
 
     public async createHabit(
-        id: string,
+        id: number,
         userId: number,
         name: string,
         type: HabitType,
@@ -52,32 +52,23 @@ export class CustomHabitBuilder {
         const mappedPeriod = PeriodFactory.create(period);
         const frequency = { multiplicity, period: mappedPeriod };
         const habit = new CustomHabit(id, name, type, frequency, new Date(), userId);
-        await this.habitRepo.add(habit);
+        await this.habitRepo.save(habit);
         return habit;
     }
 
     public async listHabits(userId: number): Promise<CustomHabit[]> {
-        return await this.habitRepo.getByUserId(userId);
+        return await this.habitRepo.findByUserId(userId);
     }
 
-    public async getHabit(habitId: string): Promise<CustomHabit | undefined> {
-        return await this.habitRepo.getById(habitId);
+    public async getHabit(habitId: number): Promise<CustomHabit | undefined> {
+        return await this.habitRepo.findById(habitId);
     }
 
-    public async logEvent(habitId: string, date: Date): Promise<void> {
-        const habit = await this.habitRepo.getById(habitId);
-        if (!habit) {
-            throw new Error("Habit not found");
-        }
-        habit.logEvent(date);
-        await this.habitRepo.update(habitId, habit);
+    public async logEvent(habitId: number, date?: Date): Promise<void> {
+        await this.habitRepo.logEvent(habitId, date || new Date());
     }
 
-    public async updateHabit(habitId: string, partial: Partial<CustomHabit>): Promise<void> {
-        await this.habitRepo.update(habitId, partial);
-    }
-
-    public async deleteHabit(habitId: string): Promise<void> {
+    public async deleteHabit(habitId: number): Promise<void> {
         await this.habitRepo.delete(habitId);
     }
 
@@ -95,7 +86,7 @@ export class CustomHabitBuilder {
         }
 
         for (const element of data.habits) {
-            const existingHabit = await this.habitRepo.getById(element.id);
+            const existingHabit = await this.habitRepo.findById(element.id);
             if (existingHabit) continue;
             const habitType = validateHabitType(element.type);
             if (!habitType) throw new Error(`Invalid habit type: ${habitType}`);
@@ -107,13 +98,13 @@ export class CustomHabitBuilder {
             for (const e of element.events) {
                 habit.logEvent(new Date(e));
             }
-            await this.habitRepo.add(habit);
+            await this.habitRepo.save(habit);
         }
     }
 
     public async exportData(): Promise<{ users: { id: number; username: string; role: string }[]; habits: any[] }> {
         const users = await this.userRepo.getAllUsers();
-        const habits = await this.habitRepo.get();
+        const habits = await this.habitRepo.list();
         const outHabits = habits.map(habit => {
             const multiplicity = habit.frequency.multiplicity;
             const period = habit.frequency.period.constructor.name.toLowerCase();
