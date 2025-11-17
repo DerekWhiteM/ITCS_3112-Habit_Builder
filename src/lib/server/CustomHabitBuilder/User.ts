@@ -42,4 +42,8 @@ export class UserRepository {
         return users[0];
     }
 
+    public async getAllUsers() {
+        return await this.repository.get();
+    }
+
 }

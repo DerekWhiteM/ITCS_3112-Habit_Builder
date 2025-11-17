@@ -19,6 +19,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
     if (!initialized) {
         initialize();
+        initialized = true;
     }
 
     const userId = event.cookies.get('userId');
