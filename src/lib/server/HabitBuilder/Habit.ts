@@ -1,8 +1,8 @@
 import type { Period } from "$lib/server/HabitBuilder/Period";
 
 export enum HabitType {
-    POSITIVE,
-    NEGATIVE
+    POSITIVE = 'POSITIVE',
+    NEGATIVE = 'NEGATIVE'
 }
 
 export type HabitFrequency = {

@@ -1,9 +1,9 @@
+import { CustomHabit } from "./CustomHabit";
 import { EnumValidator } from "../EnumValidator";
 import { HabitRepository } from "../HabitBuilder/HabitRepository";
-import { Role, UserRepository } from "./User";
 import { HabitType } from "../HabitBuilder/Habit";
-import { PeriodFactory } from "../HabitBuilder/Period";
-import { CustomHabit } from "./CustomHabit";
+import { PeriodFactory, type PeriodType } from "../HabitBuilder/Period";
+import { Role, UserRepository } from "./User";
 
 export class CustomHabitBuilder {
     private static instance: CustomHabitBuilder;
@@ -48,15 +48,13 @@ export class CustomHabitBuilder {
         name: string,
         type: "POSITIVE" | "NEGATIVE",
         multiplicity: number,
-        period: "daily" | "weekly" | "monthly" | "yearly",
+        period: PeriodType,
     ): Promise<CustomHabit> {
-        const mappedType = type === "POSITIVE" ? HabitType.POSITIVE : HabitType.NEGATIVE;
-        const mappedPeriod = period === "daily" ? PeriodFactory.daily()
-            : period === "weekly" ? PeriodFactory.weekly()
-            : period === "monthly" ? PeriodFactory.monthly()
-            : PeriodFactory.yearly();
+        const habitType = EnumValidator.validate(HabitType, type);
+        if (!habitType) throw new Error(`Invalid habit type: ${type}`);
+        const mappedPeriod = PeriodFactory.create(period);
         const frequency = { multiplicity, period: mappedPeriod };
-        const habit = new CustomHabit(id, name, mappedType, frequency, new Date(), userId);
+        const habit = new CustomHabit(id, name, habitType, frequency, new Date(), userId);
         await this.habitRepo.add(habit);
         return habit;
     }
@@ -88,36 +86,28 @@ export class CustomHabitBuilder {
 
     public async importData(payload: string | { users: { id: number; username: string; role: string }[]; habits: any[] }): Promise<void> {
         const data = typeof payload === "string" ? JSON.parse(payload) : payload;
-        const users = Array.isArray(data?.users) ? data.users : [];
-        const habits = Array.isArray(data?.habits) ? data.habits : [];
 
-        for (const u of users) {
-            const existingById = await this.userRepo.getUserById(u.id);
-            const existingByUsername = await this.userRepo.getUserByUsername(u.username);
+        for (const element of data.users) {
+            const existingById = await this.userRepo.getUserById(element.id);
+            const existingByUsername = await this.userRepo.getUserByUsername(element.username);
             if (!existingById && !existingByUsername) {
-                const role = EnumValidator.validate(Role, u.role);
-                if (!role) {
-                    continue;
-                }
-                await this.userRepo.saveUser({ id: u.id, username: u.username, role });
+                const role = EnumValidator.validate(Role, element.role);
+                if (!role) continue;
+                await this.userRepo.saveUser({ id: element.id, username: element.username, role });
             }
         }
 
-        for (const h of habits) {
-            const existing = await this.habitRepo.getById(h.id);
-            if (existing) {
-                continue;
-            }
-            const type = h.type === "POSITIVE" ? HabitType.POSITIVE : HabitType.NEGATIVE;
-            const mappedPeriod = h.frequency?.period === "daily" ? PeriodFactory.daily()
-                : h.frequency?.period === "weekly" ? PeriodFactory.weekly()
-                : h.frequency?.period === "monthly" ? PeriodFactory.monthly()
-                : PeriodFactory.yearly();
-            const frequency = { multiplicity: h.frequency?.multiplicity ?? 1, period: mappedPeriod };
-            const createdAt = h.createdAt ? new Date(h.createdAt) : new Date();
-            const habit = new CustomHabit(h.id, h.name, type, frequency, createdAt, h.userId);
-            const events: string[] = Array.isArray(h.events) ? h.events : [];
-            for (const e of events) {
+        for (const element of data.habits) {
+            const existingHabit = await this.habitRepo.getById(element.id);
+            if (existingHabit) continue;
+            const type = EnumValidator.validate(HabitType, element.type);
+            if (!type) throw new Error(`Invalid habit type: ${type}`);
+            const multiplicity = element.frequency.multiplicity;
+            const period = PeriodFactory.create(element.frequency.period);
+            const frequency = { multiplicity, period };
+            const createdAt = element.createdAt ? new Date(element.createdAt) : new Date();
+            const habit = new CustomHabit(element.id, element.name, type, frequency, createdAt, element.userId);
+            for (const e of element.events) {
                 habit.logEvent(new Date(e));
             }
             await this.habitRepo.add(habit);
@@ -127,20 +117,17 @@ export class CustomHabitBuilder {
     public async exportData(): Promise<{ users: { id: number; username: string; role: string }[]; habits: any[] }> {
         const users = await this.userRepo.getAllUsers();
         const habits = await this.habitRepo.get();
-        const outHabits = habits.map(h => {
-            const name = h.frequency.period.constructor.name.toLowerCase();
-            const period = name === "daily" ? "daily"
-                : name === "weekly" ? "weekly"
-                : name === "monthly" ? "monthly"
-                : "yearly";
+        const outHabits = habits.map(habit => {
+            const multiplicity = habit.frequency.multiplicity;
+            const period = habit.frequency.period.constructor.name.toLowerCase();
             return {
-                id: h.id,
-                userId: h.userId,
-                name: h.name,
-                type: h.type === HabitType.POSITIVE ? "POSITIVE" : "NEGATIVE",
-                frequency: { multiplicity: h.frequency.multiplicity, period },
-                createdAt: h.createdAt.toISOString(),
-                events: h.events.map(e => e.toISOString()),
+                id: habit.id,
+                userId: habit.userId,
+                name: habit.name,
+                type: habit.type,
+                frequency: { multiplicity, period },
+                createdAt: habit.createdAt.toISOString(),
+                events: habit.events.map(e => e.toISOString()),
             };
         });
         const outUsers = users.map(u => ({ id: u.id, username: u.username, role: u.role }));
