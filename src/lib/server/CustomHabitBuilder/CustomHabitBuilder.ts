@@ -1,9 +1,8 @@
 import { CustomHabit } from "./CustomHabit";
-import { EnumValidator } from "../EnumValidator";
 import { HabitRepository } from "../HabitBuilder/HabitRepository";
-import { HabitType } from "../HabitBuilder/Habit";
 import { PeriodFactory, type PeriodType } from "../HabitBuilder/Period";
-import { Role, UserRepository } from "./User";
+import { UserRepository, validateRole } from "./User";
+import { type HabitType, validateHabitType } from "../HabitBuilder/Habit";
 
 export class CustomHabitBuilder {
     private static instance: CustomHabitBuilder;
@@ -27,9 +26,9 @@ export class CustomHabitBuilder {
     }
 
     public async createUser(id: number, username: string, role: string) {
-        const validatedRole = EnumValidator.validate(Role, role);
+        const validatedRole = validateRole(role);
         if (!validatedRole) {
-            throw new Error("Invalid user role");
+            throw new Error(`Invalid user role ${role}`);
         }
         return await this.userRepo.saveUser({ id, username, role: validatedRole });
     }
@@ -46,15 +45,13 @@ export class CustomHabitBuilder {
         id: string,
         userId: number,
         name: string,
-        type: "POSITIVE" | "NEGATIVE",
+        type: HabitType,
         multiplicity: number,
         period: PeriodType,
     ): Promise<CustomHabit> {
-        const habitType = EnumValidator.validate(HabitType, type);
-        if (!habitType) throw new Error(`Invalid habit type: ${type}`);
         const mappedPeriod = PeriodFactory.create(period);
         const frequency = { multiplicity, period: mappedPeriod };
-        const habit = new CustomHabit(id, name, habitType, frequency, new Date(), userId);
+        const habit = new CustomHabit(id, name, type, frequency, new Date(), userId);
         await this.habitRepo.add(habit);
         return habit;
     }
@@ -91,7 +88,7 @@ export class CustomHabitBuilder {
             const existingById = await this.userRepo.getUserById(element.id);
             const existingByUsername = await this.userRepo.getUserByUsername(element.username);
             if (!existingById && !existingByUsername) {
-                const role = EnumValidator.validate(Role, element.role);
+                const role = validateRole(element.role);
                 if (!role) continue;
                 await this.userRepo.saveUser({ id: element.id, username: element.username, role });
             }
@@ -100,13 +97,13 @@ export class CustomHabitBuilder {
         for (const element of data.habits) {
             const existingHabit = await this.habitRepo.getById(element.id);
             if (existingHabit) continue;
-            const type = EnumValidator.validate(HabitType, element.type);
-            if (!type) throw new Error(`Invalid habit type: ${type}`);
+            const habitType = validateHabitType(element.type);
+            if (!habitType) throw new Error(`Invalid habit type: ${habitType}`);
             const multiplicity = element.frequency.multiplicity;
             const period = PeriodFactory.create(element.frequency.period);
             const frequency = { multiplicity, period };
             const createdAt = element.createdAt ? new Date(element.createdAt) : new Date();
-            const habit = new CustomHabit(element.id, element.name, type, frequency, createdAt, element.userId);
+            const habit = new CustomHabit(element.id, element.name, habitType, frequency, createdAt, element.userId);
             for (const e of element.events) {
                 habit.logEvent(new Date(e));
             }

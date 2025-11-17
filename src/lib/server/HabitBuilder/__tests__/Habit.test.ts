@@ -1,11 +1,11 @@
 import { describe, expect, test } from "vitest";
-import { Habit, HabitType } from "../Habit";
+import { Habit } from "../Habit";
 import { PeriodFactory } from "../Period";
 
 describe("Test positive habits", () => {
 
     const today = new Date("2025-11-04T00:00:00Z");
-    const type = HabitType.POSITIVE;
+    const type = 'positive';
     const id = '1';
     const name = "Do 10 push-ups";
 
@@ -90,7 +90,7 @@ describe("Test positive habits", () => {
 describe("Test negative habits", () => {
 
     const today = new Date("2025-11-04T00:00:00Z");
-    const type = HabitType.NEGATIVE;
+    const type = 'negative';
     const id = '1';
     const name = "Limit caffiene consumption";
 

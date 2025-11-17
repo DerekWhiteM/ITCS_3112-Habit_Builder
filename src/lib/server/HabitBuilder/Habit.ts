@@ -1,8 +1,11 @@
 import type { Period } from "$lib/server/HabitBuilder/Period";
 
-export enum HabitType {
-    POSITIVE = 'POSITIVE',
-    NEGATIVE = 'NEGATIVE'
+export type HabitType = 'positive' | 'negative';
+
+export function validateHabitType(value: string): HabitType | undefined {
+    return value === 'positive' || value === 'negative'
+        ? value as HabitType
+        : undefined;
 }
 
 export type HabitFrequency = {
@@ -97,9 +100,9 @@ export class Habit {
     /** Overridden by NegativeHabit */
     private adjustCalculatedStreak(streak: number) {
         switch (this.type) {
-            case HabitType.POSITIVE:
+            case 'positive':
                 return streak;
-            case HabitType.NEGATIVE:
+            case 'negative':
                 return Math.max(0, streak - 1);
         }
     }
@@ -107,9 +110,9 @@ export class Habit {
     /** Determine whether the number of events adheres to the frequency policy. */
     private isPeriodSuccess(numEvents: number): boolean {
         switch (this.type) {
-            case HabitType.POSITIVE:
+            case 'positive':
                 return numEvents >= this.frequency.multiplicity;
-            case HabitType.NEGATIVE:
+            case 'negative':
                 return numEvents <= this.frequency.multiplicity;
         }
     };

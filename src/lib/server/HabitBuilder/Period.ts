@@ -13,6 +13,12 @@ export interface Period {
 
 export type PeriodType = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
+export function validatePeriodType(value: string): PeriodType | undefined {
+    return value === 'daily' || value === 'weekly' || value === 'monthly' || value === 'yearly'
+        ? value as PeriodType
+        : undefined;
+}
+
 export class PeriodFactory {
     private static periods = {
         daily: () => new Daily(),
@@ -24,7 +30,7 @@ export class PeriodFactory {
     public static create(type: PeriodType) {
         const creator = PeriodFactory.periods[type];
         if (!creator) {
-            throw new Error(`Unknown period type: ${type}`);
+            throw new Error(`Invalid period type: ${type}`);
         }
         return creator();
     }

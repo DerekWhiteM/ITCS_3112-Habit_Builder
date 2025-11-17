@@ -1,7 +1,6 @@
-import { fail, redirect } from '@sveltejs/kit';
-import { UserRepository, Role } from '$lib/server/CustomHabitBuilder/User';
-import type { Actions, PageServerLoad } from './$types';
 import { CustomHabitBuilder } from '$lib/server/CustomHabitBuilder/CustomHabitBuilder';
+import { fail, redirect } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ cookies }) => {
     const userId = cookies.get('userId');
@@ -56,7 +55,7 @@ export const actions: Actions = {
         }
 
         const id = Date.now(); // Simple ID generation
-        await habitBuilder.createUser(id, username, 'User');
+        await habitBuilder.createUser(id, username, 'user');
 
         cookies.set('userId', id.toString(), {
             path: '/',

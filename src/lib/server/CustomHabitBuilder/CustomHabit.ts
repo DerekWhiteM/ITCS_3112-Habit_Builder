@@ -1,4 +1,4 @@
-import { Habit, HabitType, type HabitFrequency } from "../HabitBuilder/Habit";
+import { Habit, type HabitType, type HabitFrequency } from "../HabitBuilder/Habit";
 
 export class CustomHabit extends Habit {
     userId: number;
