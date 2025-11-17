@@ -1,9 +1,8 @@
-import { CustomHabit } from '$lib/server/CustomHabitBuilder/CustomHabit';
 import { CustomHabitBuilder } from '$lib/server/CustomHabitBuilder/CustomHabitBuilder';
-import { redirect } from '@sveltejs/kit';
-import { UserRepository } from '$lib/server/CustomHabitBuilder/User';
-import type { Handle } from '@sveltejs/kit';
 import { HabitRepository } from '$lib/server/CustomHabitBuilder/HabitRepository';
+import { redirect } from '@sveltejs/kit';
+import { UserRepository } from '$lib/server/CustomHabitBuilder/UserRepository';
+import type { Handle } from '@sveltejs/kit';
 
 let initialized = false;
 

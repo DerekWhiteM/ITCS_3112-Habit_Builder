@@ -19,7 +19,7 @@ export const actions: Actions = {
         }
 
         const habitBuilder = CustomHabitBuilder.getInstance();
-        const user = await habitBuilder.getUserByUsername(username);
+        const user = habitBuilder.getUserByUsername(username);
 
         if (!user) {
             return fail(400, { error: 'User not found', username });
@@ -48,14 +48,14 @@ export const actions: Actions = {
         }
 
         const habitBuilder = CustomHabitBuilder.getInstance();
-        const existingUser = await habitBuilder.getUserByUsername(username);
+        const existingUser = habitBuilder.getUserByUsername(username);
 
         if (existingUser) {
             return fail(400, { error: 'Username already exists', username });
         }
 
         const id = Date.now(); // Simple ID generation
-        await habitBuilder.createUser(id, username, 'user');
+        habitBuilder.createUser(id, username, 'user');
 
         cookies.set('userId', id.toString(), {
             path: '/',
