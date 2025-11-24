@@ -1,6 +1,6 @@
 import type { Habit } from "./Habit";
 
-export default interface HabitRepository<T extends Habit> {
+export interface IHabitRepository<T extends Habit> {
     save(habit: T): Promise<void>;
     list(filter?: Partial<T>): Promise<T[]>;
     findById(id: number | string): Promise<T | undefined>;

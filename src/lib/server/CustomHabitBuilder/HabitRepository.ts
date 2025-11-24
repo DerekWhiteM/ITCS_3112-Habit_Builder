@@ -1,5 +1,5 @@
 import type { CustomHabit } from "./CustomHabit";
-import type IHabitRepository from "$lib/server/HabitBuilder/HabitRepository";
+import type { IHabitRepository } from "$lib/server/HabitBuilder/IHabitRepository";
 
 export class HabitRepository implements IHabitRepository<CustomHabit> {
 
