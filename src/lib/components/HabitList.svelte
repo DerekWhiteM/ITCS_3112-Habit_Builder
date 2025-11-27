@@ -5,7 +5,7 @@
     name: string;
     frequency: string;
     completed: boolean;
-    streak: number;
+    streak: string;
   }> = [];
 
   // Function to toggle habit completion status
@@ -16,7 +16,7 @@
   }
 </script>
 
-<div class="habit-list">
+<div class="max-w-[600px] my-0 mx-auto">
   {#if habits.length === 0}
     <p class="text-gray-500 text-center py-4">No habits found. Add your first habit to get started!</p>
   {:else}
@@ -45,11 +45,6 @@
                 <p class="text-sm text-gray-500">{habit.frequency} • {habit.streak}</p>
               </div>
             </div>
-            <button class="text-gray-400 hover:text-gray-600">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-              </svg>
-            </button>
           </div>
         </li>
       {/each}
