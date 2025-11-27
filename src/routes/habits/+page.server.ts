@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import { CustomHabitBuilder } from '$lib/server/CustomHabitBuilder/CustomHabitBuilder';
-import type { PageServerLoad } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ cookies }) => {
     const userId = cookies.get('userId');
@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
         id: habit.id.toString(),
         name: habit.name,
         frequency: `${habit.frequency.multiplicity}x ${habit.frequency.period.constructor.name.toLowerCase()}`,
-        completed: false, // This would need to be calculated based on the habit's events
+        periodProgress: `${habit.countPeriodEvents(new Date())}/${habit.frequency.multiplicity}`,
         streak: `Streak: ${habit.calculateStreak(new Date())}`,
     }));
 
@@ -25,3 +25,14 @@ export const load: PageServerLoad = async ({ cookies }) => {
         habits: formattedHabits
     };
 };
+
+export const actions: Actions = {
+
+    logEvent: async ({ request }) => {
+        const data = await request.formData();
+        const habitId = data.get('id') as string;
+        const habitBuilder = CustomHabitBuilder.getInstance();
+        habitBuilder.logEvent(parseInt(habitId));
+    }
+
+}
