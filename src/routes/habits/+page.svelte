@@ -6,6 +6,6 @@
     $: habits = data?.habits || [];
 </script>
 
-<div class="container mx-auto px-4 py-8">
+<div class="min-h-screen bg-gradient-to-br from-purple-600 to-indigo-700 p-8">
     <HabitList {habits} />
 </div>

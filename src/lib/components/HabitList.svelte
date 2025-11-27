@@ -7,14 +7,6 @@
         periodProgress: string;
         streak: string;
     }> = [];
-
-    // Function to toggle habit completion status
-    function logEvent(id: string) {
-        console.log(`Log event for habit: ${id}`);
-        fetch(`/habits/${id}/logEvent`, {
-            method: "POST",
-        });
-    }
 </script>
 
 <div class="max-w-[600px] my-0 mx-auto">
@@ -29,21 +21,22 @@
                     class="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow"
                 >
                     <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <form method="POST" action={`?/logEvent`}>
-                                <input type="hidden" name="id" value={habit.id} />
-                                <button>Log event</button>
-                            </form>
-                            <div>
-                                <h3 class="font-medium text-gray-900">
-                                    {habit.name}
-                                </h3>
-                                <p class="text-sm text-gray-500">
-                                    {habit.frequency} • {habit.periodProgress} •
-                                    {habit.streak}
-                                </p>
-                            </div>
+                        <div>
+                            <h3 class="font-medium text-gray-900">
+                                {habit.name}
+                            </h3>
+                            <p class="text-sm text-gray-500">
+                                {habit.frequency} • {habit.periodProgress} •
+                                {habit.streak}
+                            </p>
                         </div>
+                        <form method="POST" action={`?/logEvent`}>
+                            <input type="hidden" name="id" value={habit.id} />
+                            <button
+                                class="w-full p-3 bg-purple-600 text-white font-semibold rounded-lg cursor-pointer"
+                                >Log event</button
+                            >
+                        </form>
                     </div>
                 </li>
             {/each}
