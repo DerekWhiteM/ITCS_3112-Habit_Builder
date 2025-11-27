@@ -1,6 +1,8 @@
 <script lang="ts">
-    import { enhance } from '$app/forms';
-    import type { ActionData } from './$types';
+    import { enhance } from "$app/forms";
+    import PrimaryButton from "$lib/client/components/PrimaryButton.svelte";
+    import SecondaryButton from "$lib/client/components/SecondaryButton.svelte";
+    import type { ActionData } from "./$types";
 
     export let form: ActionData;
     function reset() {
@@ -8,61 +10,45 @@
     }
 </script>
 
-<div class="min-h-screen bg-gradient-to-br from-purple-600 to-indigo-700 p-8">
-    <div class="max-w-3xl mx-auto">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 space-y-8">
-            <h1 class="text-3xl font-bold text-gray-800">Data Import/Export</h1>
+<div class="space-y-8">
+    <div class="bg-white rounded-2xl shadow-2xl p-4 space-y-4">
+        <h2 class="text-lg font-semibold">Import</h2>
+        <p>Import application state from a JSON file.</p>
+        <form
+            method="POST"
+            action="?/import"
+            enctype="multipart/form-data"
+            class="space-y-4"
+            use:enhance
+            on:submit={reset}
+        >
+            <input
+                id="data"
+                type="file"
+                name="data"
+                accept="application/json"
+                required
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg
+                           focus:outline-none focus:border-purple-500 cursor-pointer"
+            />
 
-            <form
-                method="POST"
-                action="?/import"
-                enctype="multipart/form-data"
-                use:enhance
-                on:submit={reset}
-            >
-                <label
-                    for="data"
-                    class="block text-sm font-medium text-gray-700 mb-2"
-                >
-                    Upload JSON
-                </label>
+            <PrimaryButton>Import</PrimaryButton>
 
-                <input
-                    id="data"
-                    type="file"
-                    name="data"
-                    accept="application/json"
-                    required
-                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg
-                           focus:outline-none focus:border-purple-500 transition-colors"
-                />
+            {#if form?.success === false}
+                <p class="mt-2 text-sm text-red-600">
+                    Import failed{form?.error ? ` - ${form.error}` : ""}
+                </p>
+            {:else if form?.success === true}
+                <p class="mt-2 text-sm text-green-600">Import successful</p>
+            {/if}
+        </form>
+    </div>
 
-                <button
-                    type="submit"
-                    class="mt-4 px-6 py-2 bg-purple-600 text-white font-semibold rounded-lg
-                           hover:bg-purple-700 transition-colors"
-                >
-                    Import
-                </button>
-
-                {#if form?.success === false}
-                    <p class="mt-2 text-sm text-red-600">
-                        Import failed{form?.error ? ` - ${form.error}` : ''}
-                    </p>
-                {:else if form?.success === true}
-                    <p class="mt-2 text-sm text-green-600">Import successful</p>
-                {/if}
-            </form>
-
-            <form method="POST" action="?/export">
-                <button
-                    type="submit"
-                    class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg
-                           hover:bg-indigo-700 transition-colors"
-                >
-                    Export JSON
-                </button>
-            </form>
-        </div>
+    <div class="bg-white rounded-2xl shadow-2xl p-4 space-y-4">
+        <h2 class="text-lg font-semibold">Export</h2>
+        <p>Export application state to a JSON file.</p>
+        <form method="POST" action="?/export">
+            <PrimaryButton>Export</PrimaryButton>
+        </form>
     </div>
 </div>
