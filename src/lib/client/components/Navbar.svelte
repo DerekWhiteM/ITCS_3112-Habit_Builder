@@ -9,7 +9,7 @@
     >
     <div class="flex items-center space-x-4">
         <NavItem href="/">Home</NavItem>
-        <NavItem href="/habits"> My Habits</NavItem>
+        <NavItem href="/habits">My Habits</NavItem>
         <NavItem href="/habits/create">Create Habit</NavItem>
         <NavItem href="/data">Import/Export</NavItem>
         <LogoutButton />

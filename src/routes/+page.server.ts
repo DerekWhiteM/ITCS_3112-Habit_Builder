@@ -16,6 +16,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
     const formattedHabits = habits.map(habit => ({
         id: habit.id.toString(),
         name: habit.name,
+        type: habit.type,
         frequency: `${habit.frequency.multiplicity}x ${habit.frequency.period.constructor.name.toLowerCase()}`,
         periodProgress: `${habit.countPeriodEvents(new Date())}/${habit.frequency.multiplicity}`,
         streak: `Streak: ${habit.calculateStreak(new Date())}`,
