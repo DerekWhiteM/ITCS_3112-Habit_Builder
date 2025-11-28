@@ -6,8 +6,9 @@
 </script>
 
 <div
-    class="flex items-center justify-between bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow"
+    class="relative flex items-center justify-between bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow"
 >
+    <span class="absolute left-2 top-2 h-2 w-2 rounded-full {habit.type === 'positive' ? 'bg-green-500' : 'bg-orange-500'}"></span>
     <div>
         <h3 class="font-medium text-gray-900">
             {habit.name}
