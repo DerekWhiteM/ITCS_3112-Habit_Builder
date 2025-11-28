@@ -8,7 +8,9 @@
         ><h1 class="text-xl text-white font-semibold">HabitBuilder</h1></a
     >
     <div class="flex items-center space-x-4">
-        <NavItem href="/">My habits</NavItem>
+        <NavItem href="/">Home</NavItem>
+        <NavItem href="/habits"> My Habits</NavItem>
+        <NavItem href="/habits/create">Create Habit</NavItem>
         <NavItem href="/data">Import/Export</NavItem>
         <LogoutButton />
     </div>
