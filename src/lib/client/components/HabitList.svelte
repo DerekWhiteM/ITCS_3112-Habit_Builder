@@ -10,7 +10,7 @@
             No habits found. Add your first habit to get started!
         </p>
     {:else}
-        <ul class="space-y-3">
+        <ul class="space-y-4">
             {#each habits as habit}
                 <li>
                     <Habit habit={habit} />

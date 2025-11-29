@@ -12,15 +12,15 @@
 </svelte:head>
 
 {#if page.url.pathname.startsWith("/auth")}
-    <div class="min-h-screen bg-gradient-to-br from-purple-600 to-indigo-700 pt-22">
+    <div class="min-h-screen bg-gradient-to-br from-purple-600 to-indigo-700 px-4 pt-22">
         <div class="max-w-[400px] mx-auto">
             {@render children()}
         </div>
     </div>
 {:else}
-    <Navbar />
-    <div class="min-h-screen bg-gradient-to-br from-purple-600 to-indigo-700 pt-22">
-        <div class="max-w-[600px] mx-auto">
+    <div class="min-h-screen bg-gradient-to-br from-purple-600 to-indigo-700 px-4">
+        <Navbar />
+        <div class="max-w-[600px] mt-8 mx-auto">
             {@render children()}
         </div>
     </div>
