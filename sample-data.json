@@ -1,0 +1,49 @@
+{
+    "users": [
+        {
+            "username": "user",
+            "role": "user"
+        }
+    ],
+    "habits": [
+        {
+            "username": "user",
+            "name": "Do 10 push-ups 3 times a day",
+            "type": "positive",
+            "frequency": {
+                "multiplicity": 3,
+                "period": "daily"
+            },
+            "createdAt": "2025-11-14T00:00:00.000Z",
+            "events": [
+                "2025-11-14T09:00:00.000Z",
+                "2025-11-14T10:00:00.000Z",
+                "2025-11-14T12:00:00.000Z"
+            ]
+        },
+        {
+            "username": "user",
+            "name": "Wash car once a month",
+            "type": "positive",
+            "frequency": {
+                "multiplicity": 1,
+                "period": "monthly"
+            },
+            "createdAt": "2025-11-14T00:00:00.000Z",
+            "events": [
+                "2025-11-14T09:00:00.000Z"
+            ]
+        },
+        {
+            "username": "user",
+            "name": "Quit caffeine",
+            "type": "negative",
+            "frequency": {
+                "multiplicity": 0,
+                "period": "daily"
+            },
+            "createdAt": "2025-11-14T00:00:00.000Z",
+            "events": []
+        }
+    ]
+}
