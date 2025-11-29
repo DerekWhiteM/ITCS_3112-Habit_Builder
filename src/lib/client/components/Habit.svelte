@@ -1,6 +1,7 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
     import type { Habit } from "$lib/client/types";
+    import DangerButton from "./DangerButton.svelte";
     import PrimaryButton from "./PrimaryButton.svelte";
     export let habit: Habit;
 </script>
@@ -17,8 +18,14 @@
             {habit.streak}
         </p>
     </div>
-    <form method="POST" action={`?/logEvent`} use:enhance>
-        <input type="hidden" name="id" value={habit.id} />
-        <PrimaryButton>Log</PrimaryButton>
-    </form>
+    <div class="flex space-x-2">
+        <form method="POST" action={`?/logEvent`} use:enhance>
+            <input type="hidden" name="id" value={habit.id} />
+            <PrimaryButton>Log</PrimaryButton>
+        </form>
+        <form method="POST" action={`?/deleteHabit`} use:enhance>
+            <input type="hidden" name="id" value={habit.id} />
+            <DangerButton>Delete</DangerButton>
+        </form>
+    </div>
 </div>

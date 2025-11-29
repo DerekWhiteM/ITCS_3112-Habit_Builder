@@ -1,7 +1,6 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
     import PrimaryButton from "$lib/client/components/PrimaryButton.svelte";
-    import SecondaryButton from "$lib/client/components/SecondaryButton.svelte";
     import type { ActionData } from "./$types";
 
     export let form: ActionData;

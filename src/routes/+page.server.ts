@@ -33,6 +33,13 @@ export const actions: Actions = {
         const habitId = data.get('id') as string;
         const habitBuilder = CustomHabitBuilder.getInstance();
         habitBuilder.logEvent(parseInt(habitId));
+    },
+
+    deleteHabit: async ({ request }) => {
+        const data = await request.formData();
+        const habitId = data.get('id') as string;
+        const habitBuilder = CustomHabitBuilder.getInstance();
+        await habitBuilder.deleteHabit(parseInt(habitId));
     }
 
 }
