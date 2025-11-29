@@ -1,11 +1,14 @@
-import type { CustomHabit } from "./CustomHabit";
+import { CustomHabit } from "./CustomHabit";
 import type { IHabitRepository } from "$lib/server/HabitBuilder/IHabitRepository";
+import type { HabitFrequency, HabitType } from "../HabitBuilder/Habit";
 
 export class HabitRepository implements IHabitRepository<CustomHabit> {
 
     private static instance: HabitRepository;
 
     habits: CustomHabit[] = [];
+
+    nextId = 1;
 
     private constructor() {}
 
@@ -16,9 +19,18 @@ export class HabitRepository implements IHabitRepository<CustomHabit> {
         return HabitRepository.instance;
     }
 
-    async save(habit: CustomHabit) {
+    async create(data: {
+        name: string,
+        type: HabitType,
+        frequency: HabitFrequency,
+        createdAt: Date,
+        userId: number,
+    }) {
+        const { name, type, frequency, createdAt, userId } = data;
+        const habit = new CustomHabit(this.nextId, name, type, frequency, createdAt, userId);
         this.habits.push(habit);
-        return Promise.resolve();
+        this.nextId++;
+        return Promise.resolve(habit);
     }
 
     async list(filter?: Partial<CustomHabit>) {

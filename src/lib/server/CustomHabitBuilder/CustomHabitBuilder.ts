@@ -43,17 +43,21 @@ export class CustomHabitBuilder {
     }
 
     public async createHabit(
-        id: number,
-        userId: number,
         name: string,
         type: HabitType,
         multiplicity: number,
         period: PeriodType,
+        userId: number,
     ): Promise<CustomHabit> {
         const mappedPeriod = PeriodFactory.create(period);
         const frequency = { multiplicity, period: mappedPeriod };
-        const habit = new CustomHabit(id, name, type, frequency, new Date(), userId);
-        await this.habitRepo.save(habit);
+        const habit = await this.habitRepo.create({
+            name,
+            type,
+            frequency,
+            userId,
+            createdAt: new Date(),
+        });
         return habit;
     }
 
@@ -87,19 +91,22 @@ export class CustomHabitBuilder {
         }
 
         for (const element of data.habits) {
-            const existingHabit = await this.habitRepo.findById(element.id);
-            if (existingHabit) continue;
             const habitType = validateHabitType(element.type);
             if (!habitType) throw new Error(`Invalid habit type: ${habitType}`);
             const multiplicity = element.frequency.multiplicity;
             const period = PeriodFactory.create(element.frequency.period);
             const frequency = { multiplicity, period };
             const createdAt = element.createdAt ? new Date(element.createdAt) : new Date();
-            const habit = new CustomHabit(element.id, element.name, habitType, frequency, createdAt, element.userId);
+            const habit = await this.habitRepo.create({
+                name: element.name,
+                type: habitType,
+                frequency,
+                createdAt,
+                userId: element.userId,
+            });
             for (const e of element.events) {
                 habit.logEvent(new Date(e));
             }
-            await this.habitRepo.save(habit);
         }
     }
 
