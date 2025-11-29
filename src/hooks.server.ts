@@ -1,6 +1,6 @@
 import { CustomHabitBuilder } from '$lib/server/CustomHabitBuilder/CustomHabitBuilder';
 import { HabitRepository } from '$lib/server/CustomHabitBuilder/HabitRepository';
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { UserRepository } from '$lib/server/CustomHabitBuilder/UserRepository';
 import type { Handle } from '@sveltejs/kit';
 
@@ -9,7 +9,8 @@ let initialized = false;
 function initialize() {
     const userRepo = UserRepository.getInstance();
     const habitRepo = HabitRepository.getInstance();
-    CustomHabitBuilder.getInstance(userRepo, habitRepo);
+    const habitBuilder = CustomHabitBuilder.getInstance(userRepo, habitRepo);
+    habitBuilder.createUser('admin', 'admin');
 }
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -25,7 +26,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     // Verify user actually exists in repository
     if (userId) {
         const habitBuilder = CustomHabitBuilder.getInstance();
-        user = await habitBuilder.getUserById(parseInt(userId));
+        user = habitBuilder.getUserById(parseInt(userId));
         
         // If cookie exists but user doesn't, clear the invalid cookie
         if (!user) {
@@ -47,6 +48,12 @@ export const handle: Handle = async ({ event, resolve }) => {
         // Redirect to / if logged in and trying to access /auth
         if (user && event.url.pathname === '/auth') {
             throw redirect(303, '/');
+        }
+
+        if (user && event.url.pathname === '/data') {
+            if (user.role !== 'admin') {
+                throw error(403)
+            }
         }
     }
 

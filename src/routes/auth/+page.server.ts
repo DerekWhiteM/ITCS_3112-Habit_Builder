@@ -54,10 +54,9 @@ export const actions: Actions = {
             return fail(400, { error: 'Username already exists', username });
         }
 
-        const id = Date.now(); // Simple ID generation
-        habitBuilder.createUser(id, username, 'user');
+        const user = habitBuilder.createUser(username, 'user');
 
-        cookies.set('userId', id.toString(), {
+        cookies.set('userId', user.id.toString(), {
             path: '/',
             httpOnly: true,
             sameSite: 'strict',

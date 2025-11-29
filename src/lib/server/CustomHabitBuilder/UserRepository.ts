@@ -1,4 +1,4 @@
-import type { User } from "./User";
+import type { User, Role } from "./User";
 
 export class UserRepository {
 
@@ -6,7 +6,9 @@ export class UserRepository {
 
     private users: User[] = [];
 
-    private constructor() {}
+    nextId = 1;
+
+    private constructor() { }
 
     public static getInstance() {
         if (!UserRepository.instance) {
@@ -15,8 +17,18 @@ export class UserRepository {
         return UserRepository.instance;
     }
 
-    public save(user: User) {
+    public create(data: {
+        username: string,
+        role: Role,
+    }) {
+        const { username, role } = data;
+        const user = {
+            id: this.nextId++,
+            username,
+            role,
+        }
         this.users.push(user);
+        return user;
     }
 
     public findByUsername(username: string) {

@@ -26,12 +26,12 @@ export class CustomHabitBuilder {
         return CustomHabitBuilder.instance;
     }
 
-    public createUser(id: number, username: string, role: string) {
+    public createUser(username: string, role: string) {
         const validatedRole = validateRole(role);
         if (!validatedRole) {
             throw new Error(`Invalid user role ${role}`);
         }
-        return this.userRepo.save({ id, username, role: validatedRole });
+        return this.userRepo.create({ username, role: validatedRole });
     }
 
     public getUserById(id: number) {
@@ -80,19 +80,28 @@ export class CustomHabitBuilder {
     public async importData(payload: string | { users: { id: number; username: string; role: string }[]; habits: any[] }): Promise<void> {
         const data = typeof payload === "string" ? JSON.parse(payload) : payload;
 
+        // Import users
         for (const element of data.users) {
-            const existingById = this.userRepo.findById(element.id);
-            const existingByUsername = this.userRepo.findByUsername(element.username);
-            if (!existingById && !existingByUsername) {
+            const existingUser = this.userRepo.findByUsername(element.username);
+            if (!existingUser) {
                 const role = validateRole(element.role);
-                if (!role) continue;
-                this.userRepo.save({ id: element.id, username: element.username, role });
+                if (!role) {
+                    continue;
+                }
+                this.userRepo.create({ username: element.username, role });
             }
         }
 
+        // Import habits
         for (const element of data.habits) {
+            const user = this.userRepo.findByUsername(element.username);
+            if (!user) {
+                throw new Error(`User not found: ${element.username}`);
+            }
             const habitType = validateHabitType(element.type);
-            if (!habitType) throw new Error(`Invalid habit type: ${habitType}`);
+            if (!habitType) {
+                throw new Error(`Invalid habit type: ${habitType}`);
+            }
             const multiplicity = element.frequency.multiplicity;
             const period = PeriodFactory.create(element.frequency.period);
             const frequency = { multiplicity, period };
@@ -102,7 +111,7 @@ export class CustomHabitBuilder {
                 type: habitType,
                 frequency,
                 createdAt,
-                userId: element.userId,
+                userId: user.id,
             });
             for (const e of element.events) {
                 habit.logEvent(new Date(e));
@@ -111,7 +120,12 @@ export class CustomHabitBuilder {
     }
 
     public async exportData(): Promise<{ users: { id: number; username: string; role: string }[]; habits: any[] }> {
+
+        // Export users
         const users = this.userRepo.list();
+        const outUsers = users.map(u => ({ id: u.id, username: u.username, role: u.role }));
+
+        // Export habits
         const habits = await this.habitRepo.list();
         const outHabits = habits.map(habit => {
             const multiplicity = habit.frequency.multiplicity;
@@ -126,7 +140,7 @@ export class CustomHabitBuilder {
                 events: habit.events.map(e => e.toISOString()),
             };
         });
-        const outUsers = users.map(u => ({ id: u.id, username: u.username, role: u.role }));
+
         return { users: outUsers, habits: outHabits };
     }
 }

@@ -2,7 +2,7 @@ import { redirect } from '@sveltejs/kit';
 import { CustomHabitBuilder } from '$lib/server/CustomHabitBuilder/CustomHabitBuilder';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ cookies }) => {
+export const load: PageServerLoad = async ({ cookies, locals }) => {
     const userId = cookies.get('userId');
     
     if (!userId) {
@@ -22,6 +22,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
     }));
 
     return {
+        user: locals.user,
         habits: formattedHabits
     };
 };
