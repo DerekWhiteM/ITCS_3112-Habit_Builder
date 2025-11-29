@@ -2,7 +2,7 @@ import { redirect } from '@sveltejs/kit';
 import { CustomHabitBuilder } from '$lib/server/CustomHabitBuilder/CustomHabitBuilder';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ cookies, locals }) => {
+export const load: PageServerLoad = async ({ cookies }) => {
     const userId = cookies.get('userId');
     
     if (!userId) {
@@ -12,7 +12,6 @@ export const load: PageServerLoad = async ({ cookies, locals }) => {
     const habitBuilder = CustomHabitBuilder.getInstance();
     const habits = await habitBuilder.listHabits(parseInt(userId));
     
-    // Transform the habits data to match our frontend expectations
     const formattedHabits = habits.map(habit => ({
         id: habit.id.toString(),
         name: habit.name,
@@ -22,7 +21,6 @@ export const load: PageServerLoad = async ({ cookies, locals }) => {
     }));
 
     return {
-        user: locals.user,
         habits: formattedHabits
     };
 };
