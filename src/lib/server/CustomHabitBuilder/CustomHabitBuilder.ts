@@ -1,5 +1,5 @@
 import { CustomHabit } from "./CustomHabit";
-import { HabitRepository } from "../CustomHabitBuilder/HabitRepository";
+import type { IHabitRepository } from "../HabitBuilder/IHabitRepository";
 import { PeriodFactory, type PeriodType } from "../HabitBuilder/Period";
 import { type HabitType, validateHabitType } from "../HabitBuilder/Habit";
 import { validateRole } from "./User";
@@ -9,14 +9,14 @@ export class CustomHabitBuilder {
     private static instance: CustomHabitBuilder;
 
     private userRepo: UserRepository;
-    private habitRepo: HabitRepository;
+    private habitRepo: IHabitRepository<CustomHabit>;
 
-    constructor(userRepo: UserRepository, habitRepo: HabitRepository) {
+    constructor(userRepo: UserRepository, habitRepo: IHabitRepository<CustomHabit>) {
         this.userRepo = userRepo;
         this.habitRepo = habitRepo;
     }
 
-    static getInstance(userRepo?: UserRepository, habitRepo?: HabitRepository) {
+    static getInstance(userRepo?: UserRepository, habitRepo?: IHabitRepository<CustomHabit>) {
         if (!CustomHabitBuilder.instance) {
             if (!userRepo || !habitRepo) {
                 throw new Error("Repositories must be provided on initialization");
@@ -62,7 +62,7 @@ export class CustomHabitBuilder {
     }
 
     public async listHabits(userId: number): Promise<CustomHabit[]> {
-        return await this.habitRepo.findByUserId(userId);
+        return await this.habitRepo.list({userId});
     }
 
     public async getHabit(habitId: number): Promise<CustomHabit | undefined> {

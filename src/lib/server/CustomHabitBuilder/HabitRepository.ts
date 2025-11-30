@@ -50,11 +50,6 @@ export class HabitRepository implements IHabitRepository<CustomHabit> {
         return Promise.resolve(habit);
     }
 
-    async findByUserId(id: number) {
-        const habit = this.habits.filter(habit => habit.userId === id);
-        return Promise.resolve(habit);
-    }
-
     async logEvent(id: number, date: Date) {
         const habit = await this.findById(id);
         if (!habit) {
