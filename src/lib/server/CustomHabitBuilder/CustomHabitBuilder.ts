@@ -3,20 +3,20 @@ import type { IHabitRepository } from "../HabitBuilder/IHabitRepository";
 import { PeriodFactory, type PeriodType } from "../HabitBuilder/Period";
 import { type HabitType, validateHabitType } from "../HabitBuilder/Habit";
 import { validateRole } from "./User";
-import type { UserRepository } from "./UserRepository";
+import type { IUserRepository } from "./IUserRepository";
 
 export class CustomHabitBuilder {
     private static instance: CustomHabitBuilder;
 
-    private userRepo: UserRepository;
+    private userRepo: IUserRepository;
     private habitRepo: IHabitRepository<CustomHabit>;
 
-    constructor(userRepo: UserRepository, habitRepo: IHabitRepository<CustomHabit>) {
+    constructor(userRepo: IUserRepository, habitRepo: IHabitRepository<CustomHabit>) {
         this.userRepo = userRepo;
         this.habitRepo = habitRepo;
     }
 
-    static getInstance(userRepo?: UserRepository, habitRepo?: IHabitRepository<CustomHabit>) {
+    static getInstance(userRepo?: IUserRepository, habitRepo?: IHabitRepository<CustomHabit>) {
         if (!CustomHabitBuilder.instance) {
             if (!userRepo || !habitRepo) {
                 throw new Error("Repositories must be provided on initialization");

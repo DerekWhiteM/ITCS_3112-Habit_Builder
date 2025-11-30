@@ -1,6 +1,7 @@
 import type { User, Role } from "./User";
+import type { IUserRepository } from "./IUserRepository";
 
-export class UserRepository {
+export class UserRepository implements IUserRepository {
 
     private static instance: UserRepository;
 
@@ -42,5 +43,4 @@ export class UserRepository {
     public list() {
         return this.users;
     }
-
 }
