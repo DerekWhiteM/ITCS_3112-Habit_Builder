@@ -1,11 +1,16 @@
 import type { Period } from "$lib/server/HabitBuilder/Period";
 
-export type HabitType = 'positive' | 'negative';
+const habitTypes = ['positive', 'negative'] as const;
+
+export type HabitType = typeof habitTypes[number];
 
 export function validateHabitType(value: string): HabitType | undefined {
-    return value === 'positive' || value === 'negative'
-        ? value as HabitType
-        : undefined;
+    for (const type of habitTypes) {
+        if (type === value) {
+            return type;
+        }
+    }
+    return undefined;
 }
 
 export type HabitFrequency = {

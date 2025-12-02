@@ -11,12 +11,17 @@ export interface Period {
 
 }
 
-export type PeriodType = 'daily' | 'weekly' | 'monthly' | 'yearly';
+const periodTypes = ['daily', 'weekly', 'monthly', 'yearly'] as const;
+
+export type PeriodType = typeof periodTypes[number];
 
 export function validatePeriodType(value: string): PeriodType | undefined {
-    return value === 'daily' || value === 'weekly' || value === 'monthly' || value === 'yearly'
-        ? value as PeriodType
-        : undefined;
+    for (const type of periodTypes) {
+        if (type === value) {
+            return type;
+        }
+    }
+    return undefined;
 }
 
 export class PeriodFactory {

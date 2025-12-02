@@ -1,9 +1,14 @@
-export type Role = 'admin' | 'user';
+const userTypes = ['admin', 'user'] as const;
+
+export type Role = typeof userTypes[number];
 
 export function validateRole(value: string): Role | undefined {
-    return value === 'admin' || value === 'user'
-        ? value as Role
-        : undefined;
+    for (const type of userTypes) {
+        if (type === value) {
+            return type;
+        }
+    }
+    return undefined;
 }
 
 export type User = {
