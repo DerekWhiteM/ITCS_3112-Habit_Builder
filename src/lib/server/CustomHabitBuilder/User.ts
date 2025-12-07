@@ -11,8 +11,45 @@ export function validateRole(value: string): Role | undefined {
     return undefined;
 }
 
-export type User = {
+export abstract class User {
     id: number;
     username: string;
-    role: Role;
+
+    constructor(id: number, username: string) {
+        this.id = id;
+        this.username = username;
+    }
+
+    abstract getRole(): Role;
+}
+
+export class AdminUser extends User {
+    role: Role = 'admin';
+
+    override getRole() {
+        return this.role;
+    }
+}
+
+export class StandardUser extends User {
+    role: Role = 'user';
+
+    override getRole() {
+        return this.role;
+    }
+}
+
+export class UserFactory {
+    private static users = {
+        admin: (id: number, username: string) => new AdminUser(id, username),
+        user: (id: number, username: string) => new StandardUser(id, username),
+    }
+
+    public static create(id: number, username: string, role: Role) {
+        const creator = UserFactory.users[role];
+        if (!creator) {
+            throw new Error(`Invalid user role: ${role}`);
+        }
+        return creator(id, username);
+    }
 }

@@ -123,7 +123,7 @@ export class CustomHabitBuilder {
 
         // Export users
         const users = this.userRepo.list();
-        const outUsers = users.map(u => ({ id: u.id, username: u.username, role: u.role }));
+        const outUsers = users.map(u => ({ id: u.id, username: u.username, role: u.getRole() }));
 
         // Export habits
         const habits = await this.habitRepo.list();

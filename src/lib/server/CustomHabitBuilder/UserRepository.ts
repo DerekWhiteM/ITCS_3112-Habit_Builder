@@ -1,4 +1,4 @@
-import type { User, Role } from "./User";
+import { type User, type Role, UserFactory } from "./User";
 import type { IUserRepository } from "./IUserRepository";
 
 export class UserRepository implements IUserRepository {
@@ -23,11 +23,7 @@ export class UserRepository implements IUserRepository {
         role: Role,
     }) {
         const { username, role } = data;
-        const user = {
-            id: this.nextId++,
-            username,
-            role,
-        }
+        const user = UserFactory.create(this.nextId++, username, role);
         this.users.push(user);
         return user;
     }

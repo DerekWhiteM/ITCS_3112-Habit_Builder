@@ -51,7 +51,7 @@ export const handle: Handle = async ({ event, resolve }) => {
         }
 
         if (user && event.url.pathname === '/data') {
-            if (user.role !== 'admin') {
+            if (user.getRole() !== 'admin') {
                 throw error(403)
             }
         }
