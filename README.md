@@ -1,7 +1,6 @@
 # 1. Project Overview
 This project is a habit-tracking system designed for users who want to keep track of both positive habits (things they want to do more often) and negative habits (things they want to reduce). The goal was to keep the workflow simple: users can create habits, log events quickly, see their streaks, and admins can import/export app data. The entire system uses clean abstractions around habits, periods, repositories, and a facade builder that ties everything together.
 
-
 ### Key features:
 - Login/signup flow using cookie-based authentication  
 - Create, list, log, and delete habits  
@@ -9,14 +8,10 @@ This project is a habit-tracking system designed for users who want to keep trac
 - Admin-only JSON import/export of the full system  
 - Clean separation between domain logic, persistence, and UI actions  
 
-
 ### Important constraints:
 - All data is stored in memory and it resets when the server restarts.  
 - Period math uses UTC and assumes week boundaries starting Sunday.  
 - Import/export expects valid roles and habit types.  
-
-
-
 
 # 2. Build & Run Instructions
 1. Ensure Node.js v20+ is installed  
@@ -24,18 +19,7 @@ This project is a habit-tracking system designed for users who want to keep trac
 3. Run `npm run build` to build the application  
 4. Run `npm run preview` to run the application  
 
-
-
-
 # 3. Required OOP Features
-
-
-## Requirements Implementation (14/14):
-
-
-### OOP Features Table
-
-
 | OOP Feature | File Name | Line Numbers | Reasoning / Context |
 |------------|-----------|--------------|---------------------|
 | 1st instance of Inheritance | CustomHabit.ts | Line 3 + constructor 6-16 | CustomHabit extends Habit so that it can reuse(inherit) the habit logic and add userId along with custom fields. So that new user have unique Id. |
@@ -50,9 +34,6 @@ This project is a habit-tracking system designed for users who want to keep trac
 | Data Structure | HabitRepository.ts, UserRepository.ts | HabitRepo Line 9, mutations 31-74; UserRepo Line 7, mutations 30-44 | User’s habits are stored in the form of an arrays in memory, operations user list traversals to search and operate over array. Users are also stored in the same array-based repository pattern. |
 | Console/GUI I/O | Web UI (`src/routes/*`) | — | We implemented GUI (web-based) forms and HTTP response for I/O. (forms/pages handle input and output.) |
 
-
-
-
 # 4. Design Patterns
 
 
@@ -62,44 +43,7 @@ This project is a habit-tracking system designed for users who want to keep trac
 | 2nd Design Pattern (Factory) | Creational | Period.ts | 22-37 | ThePeriodFactory.create(type) creates correct subtype object based on string input given as type.(daily,weekly,monthly,yearly) This encapsulates object creation and decouples callers from concrete classes; the builder uses it when creating habits. |
 | 3rd Design Pattern (Facade) | Structural | CustomHabitBuilder.ts | 45-145 | Gives a simple unified interface for complex API routes for operations like creating, logging, and listing. while hiding complex logic and giving one interface for routes and UI, making code more maintainable. |
 
-
-
-
-# SOLID Principles:
-
-
-### Single Responsibility Principle (SRP)
-- Allowing each major component in the system to have a clearly defined role.  
-- The Period classes focuses only on calculating the stamp time for habits (daily,weekly, monthly, yearly) (src/lib/server/HabitBuilder/Period.ts:39-141).  
-- The Habit Repository is responsible only for storing, deleting and listing habits (src/lib/server/CustomHabitBuilder/HabitRepository.ts: 22-74)  
-- The CustomHabitBuilder acats as a facade pattern which ties everything together, creating, listing, logging, importing and exporting (src/lib/server/CustomHabitBuilder/CustomHabitBuilder.ts:45-78, 80-145).  
-
-
-### Open/Closed Principle (OCP)
-- The system is open to extension without any requirements to change existing code.  
-- PeriodFactory.create can be updated to allow new period types without modifying Habit logic. (Period.ts : 22-37)
-
-
-### Liskov Substitution Principle (LSP)
-- All concrete Period types follow the Period interface and can be substituted freely.  
-- Habit relies only on the interface and calls its methods without concern for which subclass it receives. (Habit.ts:55-67, 87-95)
-
-
-### Interface Segregation Principle (ISP)
-- Interfaces are deliberately small and focused.  
-- IHabitRepository contains only the methods required for habit functionality. (src/lib/server/HabitBuilder/IHabitRepository.ts:3-9)
-
-
-### Dependency Inversion Principle (DIP)
-- CustomHabitBuilder depends on abstractions instead of concrete classes.  
-- It depends on IHabitRepository rather than HabitRepository (src/lib/server/CustomHabitBuilder/CustomHabitBuilder.ts:12,14-18)
-
-
-
-
-
-
-# 5. Design Decisions (Summary)
+# 5. Design Decisions
 
 
 ### Habit logic stays inside Habit
