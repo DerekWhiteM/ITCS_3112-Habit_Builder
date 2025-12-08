@@ -29,10 +29,17 @@ This project is a habit-tracking system designed for users who want to keep trac
 
 # 3. Required OOP Features
 
+
+## Requirements Implementation (14/14):
+
+
+### OOP Features Table
+
+
 | OOP Feature | File Name | Line Numbers | Reasoning / Context |
 |------------|-----------|--------------|---------------------|
 | 1st instance of Inheritance | CustomHabit.ts | Line 3 + constructor 6-16 | CustomHabit extends Habit so that it can reuse(inherit) the habit logic and add userId along with custom fields. So that new user have unique Id. |
-| 2nd instance of inheritance | Period.ts | base lines:1-12, Weekly, Monthly: 91-115 | Monthly, weekly class implements the Period interface. Thus obeying and inheriting the signature of the methods from the contract providing concrete implementation of getPeriodStart, getPeriodEnd, and getPreviousStart. |
+| 2nd instance of Inheritance (User Role Hierarchy) | User.ts | User (lines 11-28), AdminUser (lines 29-37), StandardUser (lines 38-46) | Introduces a proper inheritance chain. AdminUser and StandardUser both extend the abstract User class and override getRole(). This demonstrates inheritance role-specific behavior, and polymorphism while keeping user modeling clean and extensible. |
 | 1st interface/implementation | Period.ts | Interface: lines 1-12, Daily implementation: 39-61 | The interface Period defines time by keeping track of the start,end and previous period. Then Daily class implements all the required methods. |
 | 2nd interface/implementation | UserRepository.ts and IUserRepository.ts | IUserRepository:1-9, UserRepository:2,21-44 | The UserRepository provides actual logic for methods from IUserRepository, thus allowing CustomHabitBuilder to remain decoupled from concrete class while callers use the same interface and following DIP, enabling polymorphism as well. |
 | 3rd interface/implementation | HabitRepository.ts and IHabitRepository.ts | HabitRepository.ts: line 5-76 | It implements the interface for creating, listing and logging habits. Thus keeping all the habits functionality of habits together. |
